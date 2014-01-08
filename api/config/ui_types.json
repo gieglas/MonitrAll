@@ -1,0 +1,12 @@
+[
+{"name":"Table","value":"Table"},
+{"name":"Simple","value":"Simple"},
+{"name":"Boxes with Conditions","value":"Boxes"},
+{"name":"Table with Conditions","value":"ConditionTable"},
+{"name":"Percent with Conditions","value":"Percent"},
+{"name":"Todo with Conditions","value":"Todo"},
+{"name":"Bar Chart","value":"BarChart"},
+{"name":"Line Chart","value":"LineChart"},
+{"name":"Fill Chart","value":"FillChart"},
+{"name":"Pie Chart","value":"PieChart"}
+]

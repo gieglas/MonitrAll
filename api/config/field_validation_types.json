@@ -1,0 +1,12 @@
+[
+{"name":"","value":null},
+{"name":"email","value":"email"},
+{"name":"url","value":"url"},
+{"name":"urlstrict","value":"urlstrict"},
+{"name":"digits","value":"digits"},
+{"name":"number","value":"number"},
+{"name":"alphanum","value":"alphanum"},
+{"name":"dateIso","value":"dateIso"},
+{"name":"dateTimeIso","value":"dateTimeIso"},
+{"name":"phone","value":"phone"}
+]

@@ -1,0 +1,1 @@
+[{"Table":"table1","Interface":"2","is_Read = 0":"0","is_Read = 1":"0","is_Read = 2":"2","is_Read <> 2":"0"},{"Table":"table2","Interface":"13","is_Read = 0":"0","is_Read = 1":"0","is_Read = 2":"13","is_Read <> 2":"0"},{"Table":"table3","Interface":"27","is_Read = 0":"0","is_Read = 1":"15","is_Read = 2":"12","is_Read <> 2":"15"}]

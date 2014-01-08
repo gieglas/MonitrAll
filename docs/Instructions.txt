@@ -1,0 +1,73 @@
+/*provider options
+mysql
+SQLOLEDB
+sqlsrv
+SYBASE
+oci
+WEBSERVICE
+EXECUTE*/
+
+/*
+scope
+---------------------------------------------------
+scope:
+	line
+	results
+ICON
+--------------------------------------------------
+Icons by Glyphicons as defined at http://getbootstrap.com/2.3.2/base-css.html#icons
+VALIDATION OPTIONS (based on http://parsleyjs.org/)
+valid_test:
+	same as in forms
+required:
+	 true|false
+valid_minlength:
+	number|null
+valid_maxlength:
+	number|null
+
+OPTIONS for SELECT RADIO AND CHECKBOX
+----------------------------------------------------
+"options" => array(array("name" => "One","value"=>"1"),
+			array("name" => "Two","value"=>"2"),
+			array("name" => "Three","value"=>"3")
+	),
+"optionURL" => "../data/testPercent.json"
+*/
+
+/*
+scope
+---------------------------------------------------
+scope:
+	line
+	results
+ICON
+--------------------------------------------------
+Icons by Glyphicons as defined at http://getbootstrap.com/2.3.2/base-css.html#icons
+VALIDATION OPTIONS (based on http://parsleyjs.org/)
+----------------------------------------------------
+valid_test:
+	email
+	url
+	urlstrict
+	digits
+	number
+	alphanum
+	dateIso
+	phone
+	null
+required:
+	 true|false
+valid_minlength:
+	number|null
+valid_maxlength:
+	number|null
+
+OPTIONS for SELECT RADIO AND CHECKBOX
+----------------------------------------------------
+"options" => array(array("name" => "One","value"=>"1"),
+			array("name" => "Two","value"=>"2"),
+			array("name" => "Three","value"=>"3")
+	),
+"optionURL" => "../data/testPercent.json"
+*/

@@ -1,0 +1,7 @@
+[
+{"name":"text","value":"text"},
+{"name":"textarea","value":"textarea"},
+{"name":"select","value":"select"},
+{"name":"radio","value":"radio"},
+{"name":"checklist","value":"checklist"}
+]

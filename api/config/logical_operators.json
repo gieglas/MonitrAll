@@ -1,0 +1,12 @@
+[
+{"name":"","value":""},
+{"name":"> (Number)","value":">"},
+{"name":"< (Number)","value":"<"},
+{"name":">= (Number)","value":">="},
+{"name":"<= (Number)","value":"<="},
+{"name":"== (Number)","value":"=="},
+{"name":"!= (Number)","value":"!="},
+{"name":">< Between (Number)","value":"><"},
+{"name":"=== (String)","value":"==="},
+{"name":"!== (String)","value":"!=="}
+]

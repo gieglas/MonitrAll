@@ -1,0 +1,95 @@
+    <!-- Side bar navigation template -->
+    <script id="resultsSideBarTmpl" type="text/template">
+    {{#.}} 
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse{{index_num}}">{{name}}</a>
+      </div>
+      <div id="collapse{{index_num}}" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <ul>{{#items}}<li class="view" id="accordion{{group_index_num}}{{index_num}}"><a href="#results/{{group_index_num}}/{{index_num}}">{{name}}</a></li>{{/items}}</ul>
+        </div>
+      </div>
+    </div>
+    {{/.}}
+    </script>
+    <!-- Breadcrumbs template -->
+    <script id="breadcrumbsTmpl" type="text/template">
+        <li><a href="#" id="showmenu"></a></li>
+        {{#parents}}
+        <li><a href="{{url}}">{{name}}</a> <span class="divider">/</span></li>
+        {{/parents}}
+        <li class="active">{{current}}</li>
+    </script>
+    <!-- Module commons templare -->
+    <script id="moduleTmpl" type="text/template">
+      <div class="clearfix">
+        <div class="pull-left"><h4>{{name}}</h4></div>
+        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
+      </div>
+      <div class="module-description">
+        {{description}}
+      </div>      
+      {{#hasForms}}<div class="clearfix">
+      {{#forms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" class="results-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/forms}}
+      </div>{{/hasForms}}
+      <div id="module-data"></div>         
+    </script>
+    <!-- Module commons frontpage templare -->
+    <script id="moduleFrontTmpl" type="text/template">
+      <div class="row-fluid widget-container">
+      <div class="clearfix">        
+        <div class="pull-right"><a href="#" class="btn refresh-button-front"><i class="icon-refresh"></i></a></div>
+      </div>
+      {{#.}}
+      <div class="module span4">
+      <a href="#results/{{group_index_num}}/{{index_num}}"><h4>{{name}}</h4></a>
+      <div id="module-data{{group_index_num}}_{{index_num}}"></div>         
+      </div>
+      {{/.}}
+      </div>
+    </script>
+    <!-- Module percent templare -->
+    <script id="modulePercentTmpl" type="text/template">
+      <table class="table"><tbody>
+      {{#data}}
+      <tr><td>{{name}}</td><td>{{value}}%</td>
+          <td style="width:70%"><div class="progress {{#green}}progress-success{{/green}} {{#red}}progress-danger{{/red}} {{#orange}}progress-warning{{/orange}}">
+                <div class="bar" style="width: {{value}}%;"></div>
+              </div>
+          </td>
+          {{#notFront}}{{#hasForms}}<td>
+      {{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}" class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}
+      </td>{{/hasForms}}{{/notFront}}
+      </tr>
+      {{/data}}
+      </tbody></table>         
+    </script>
+    <!-- Module boxes templare -->
+    <script id="moduleBoxesTmpl" type="text/template">
+      <div class="row-fluid">
+        {{#data}}<div class="{{#front}}span4{{/front}} {{#notFront}}span3{{/notFront}} box1 aligncenter {{#green}}box-success-clrs{{/green}} {{#red}}box-error-clrs{{/red}} {{#orange}}box-alert-clrs{{/orange}}"><h2>{{value}}</h2><p>{{name}}</p>{{#notFront}}{{#hasForms}}<div class="clearfix">
+      {{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}"class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}
+      </div>{{/hasForms}}{{/notFront}}</div>{{/data}} 
+      </div>            
+    </script>
+    <!-- Module Condition Table templare -->
+    <script id="moduleConditionTableTmpl" type="text/template">
+       <table class="table"><thead><tr><th></th><th>Name</th><th>Value</th>{{#notFront}}{{#hasForms}}<th></th>{{/hasForms}}{{/notFront}}</tr></thead><tbody>
+        {{#data}}<tr><td style="width:40px" class="{{#green}}box-success-clrs{{/green}} {{#red}}box-error-clrs{{/red}} {{#orange}}box-alert-clrs{{/orange}}"></td><td>{{name}}</td><td>{{value}}</td>{{#notFront}}{{#hasForms}}<td>
+      {{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}" class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}
+      </td>{{/hasForms}}{{/notFront}}</tr>{{/data}} 
+      </tbody></table> 
+    </script>
+    <!-- Module Todo templare -->
+    <script id="moduleTodoTmpl" type="text/template">
+      <table class="table"><tbody>
+      {{#data}}
+      <tr class="{{#green}}todo-green{{/green}} {{#red}}todo-red{{/red}} {{#orange}}todo-orange{{/orange}}"><td class="moduleColor">{{name}}</td>
+          {{#notFront}}{{#hasForms}}<td>
+      {{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}" class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}
+      </td>{{/hasForms}}{{/notFront}}
+      </tr>
+      {{/data}}
+      </tbody></table>         
+    </script>

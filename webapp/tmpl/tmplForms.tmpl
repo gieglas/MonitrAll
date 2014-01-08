@@ -1,0 +1,68 @@
+    <!-- Form commons templare -->
+    <script id="formCommonTmpl" type="text/template"> 
+      {{#form}}  		    	
+    	<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 id="modalGeneralHeader">{{name}}</h3>
+        </div>
+        <div id="modalGeneralBody" class="modal-body">
+			<form id="{{id}}" class="noEnterSubmit">
+				<fieldset>			    	
+					<p>{{description}}</p>
+					<table class="table"><tbody>      
+					{{#fields}}
+      				<tr>
+      					<td><label>{{title}}</label></td>
+      					<td>
+            {{! ----------------Text-------------------}}
+  					{{#isText}}<input class="formInput" 
+              {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}} 
+              {{#valid_minlength}}data-minlength={{valid_minlength}}{{/valid_minlength}}
+              {{#valid_maxlength}}data-maxlength={{valid_maxlength}}{{/valid_maxlength}}
+              data-trigger="change" 
+              {{#isRequired}}data-required="true"{{/isRequired}} 
+              type="text" name={{id}} value="{{default_value}}" placeholder="{{placeholder}}">{{/isText}}
+            {{! ----------------TextArea-------------------}} 			    					    		
+		    		{{#isTextArea}}<textarea rows="5" class="formInput" 
+              {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}}
+              {{#valid_minlength}}data-minlength={{valid_minlength}}{{/valid_minlength}}
+              {{#valid_maxlength}}data-maxlength={{valid_maxlength}}{{/valid_maxlength}} 
+              {{#isRequired}}data-required="true"{{/isRequired}} 
+              data-trigger="change" 
+              name={{id}} placeholder="{{placeholder}}">{{default_value}}</textarea>{{/isTextArea}} 
+            {{! ----------------SELECT-------------------}}
+		    		{{#isSelect}}<select 
+              {{#isRequired}}data-required="true"{{/isRequired}} 
+              data-trigger="change" name={{id}} id="{{id}}">
+              {{#options}}
+                <option value="{{value}}">{{name}}</option>
+              {{/options}}
+            </select>{{/isSelect}}		 
+            {{! ----------------CHECKLIST-------------------}}   		
+		    		{{#isCheckList}}
+              <div>
+              {{#options}}
+                  <input class="formInput" {{#isFirstChecklist}}  data-trigger="change" {{#isRequired}}data-required="true"{{/isRequired}}{{/isFirstChecklist}} type="checkbox" name="{{id}}" value="{{value}}">
+                  {{name}}
+              {{/options}}
+              </div>
+            {{/isCheckList}}
+            {{! ----------------RADIO-------------------}}
+		    		{{#isRadio}}
+              <div>
+              {{#options}}
+                <input class="formInput" {{#isFirstRadio}}  data-trigger="change" {{#isRequired}}data-required="true"{{/isRequired}}{{/isFirstRadio}} type="radio" name="{{id}}" value="{{value}}">
+                {{name}}
+              {{/options}}
+              </div>
+            {{/isRadio}}
+      					</td>
+      				</tr>      
+      				{{/fields}}
+      				</tbody></table>			    					    	
+	    		</fieldset>
+	    	</form>	    	
+        </div>
+        <div id="modalGeneralFooter" class="modal-footer"><div class="btn-group"><button class="btn" data-group="{{group_index_num}}" data-item="{{item_index_num}}" data-form="{{form_index_num}}" {{#hasLineId}}data-lineid="{{lineid}}"{{/hasLineId}} id="okModal" data-formid={{id}} data-formscope="{{scope}}" data-formtype="{{type}}">OK</button> <button class="btn" id="cancelModal">Cancel</button></div></div>
+      {{/form}}
+    </script>    
