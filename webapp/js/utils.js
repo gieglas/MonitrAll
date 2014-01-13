@@ -111,5 +111,53 @@ window.utils = {
             'background-color': '#fee',
             opacity: 0.80
         }).appendTo("body").fadeIn(200);
+    },
+    downloadJSON2CSV: function (objArray,filename)
+    {
+        var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+
+        var str = '';
+
+        for (var i = 0; i < array.length; i++) {
+            var line = '';
+
+            for (var index in array[i]) {
+                line += array[i][index] + ',';
+            }
+
+            // Here is an example where you would wrap the values in double quotes
+            // for (var index in array[i]) {
+            //    line += '"' + array[i][index] + '",';
+            // }
+
+            line.slice(0,line.Length-1); 
+
+            str += line + '\r\n';
+        }
+         // Data URI
+         csvData = "data:text/csv;charset=utf-8," + encodeURIComponent(str);
+
+         $(this)
+            .attr({
+            'download': filename,
+                'href': csvData,
+                'target': '_blank'
+        })
+    },
+     downloadJSON: function (objArray,filename)
+    {
+        
+
+        var str = JSON.stringify(objArray)
+
+         // Data URI
+         jsonData = "data:text;charset=utf-8," + encodeURIComponent(str);         
+
+         $(this)
+            .attr({
+            'download': filename,
+                'href': jsonData,
+                'target': '_blank'
+        })
     }
 };

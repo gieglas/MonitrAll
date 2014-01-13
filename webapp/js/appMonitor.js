@@ -47,6 +47,7 @@ var ENTER_KEY = 13;
 var ESC_KEY = 27;
 var ajaxRunCount = 0;
 var previousFlotPoint = 0;
+var currentResultData = null;
 //---------------------Model----------------------------------------------------------------------
 var resultsGroupsModel = {
 	groupsData : null,
@@ -412,6 +413,7 @@ var appRouter = {
     },
     //------------------RESPONSE FUNCTIONS-----------------------------
     responseResponse:function(name,data,groupIndexId,itemIndexId,formIndexId,isFront) {
+    	currentResultData = data;
     	switch (name) {
     		case 'getResultsGroupList':
     			//update the model
@@ -488,6 +490,10 @@ var resultsViews = {
 	bindEvents : function () {
 		//click on refresh
 		$('#content').on('click','.refresh-button',this.refreshModuleClick);
+		//click on csv download
+		$('#content').on('click','.csv-button',this.csvDownloadClick);		
+		//click on json download
+		$('#content').on('click','.json-button',this.jsonDownloadClick);		
 		//click on refresh front
 		$('#content').on('click','.refresh-button-front',this.refreshFrontModuleClick);	
 		//click on show menu
@@ -510,6 +516,14 @@ var resultsViews = {
 		//:DEBUG alert('group:' + groupId + ' item:' + itemId);
 		appRouter.doResults(groupId,itemId,MonitorAllApp.currentParams);
 		return false;
+	},
+	csvDownloadClick: function() {
+		//:TODO maybe server side would be better
+		utils.downloadJSON2CSV.apply(this,[currentResultData, 'export.csv']);		
+	},
+	jsonDownloadClick: function() {
+		//:TODO maybe server side would be better
+		utils.downloadJSON.apply(this,[currentResultData, 'export.txt']);		
 	},
 	refreshFrontModuleClick: function() {		
 		appRouter.doHome();

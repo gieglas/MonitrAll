@@ -24,8 +24,10 @@
     <!-- Module commons templare -->
     <script id="moduleTmpl" type="text/template">
       <div class="clearfix">
-        <div class="pull-left"><h4>{{name}}</h4></div>
+        <div class="pull-left"><h4>{{name}}</h4></div>        
         <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
+        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn csv-button">CSV</a></div>
+        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn json-button">JSON</a></div>
       </div>
       <div class="module-description">
         {{description}}
