@@ -434,6 +434,9 @@ var appRouter = {
 				case 'Table':
 					resultsViews.renderModuleDataTable(data,groupIndexId,itemIndexId,isFront);
 					break;
+				case 'Details':
+					resultsViews.renderModuleDataDetails(data,groupIndexId,itemIndexId,isFront);
+					break;
 				case 'Boxes':
 					resultsViews.renderModuleDataConditionals(data,'Boxes',groupIndexId,itemIndexId,isFront);
 					break;
@@ -776,6 +779,48 @@ var resultsViews = {
 		if (data.length > 0) {
 			$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25});
 		}		
+	},
+	renderModuleDataDetails: function(data,groupIndexId,itemIndexId,isFront){
+		/*get module id depending if is in front page*/
+		var moduleId = '#module-data' + (isFront?groupIndexId+'_'+itemIndexId:'');
+		//get table headers from json object 
+		var headers = utils.getHeaders(data);
+		//DEBUG: alert(headers);
+		var headersLength = headers.length;
+		//construct template from headers
+		var template = '';		
+		template = template +'<table cellpadding="0" cellspacing="0" border="0" class="tableDetails "><tbody>{{#.}}';
+		//for forms and not front
+		if (!isFront) {
+			template = template + '{{#hasForms}}<tr><td>{{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}" class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}</td><td></td></tr>{{/hasForms}}';
+		}
+		//fill in template the headers and fill in template the data
+		for(var i = 0; i < headersLength; i++){
+			template = template +'<tr><td class="tableDetailsTitle"><b>' + headers[i] + '</b></td><td class="details-markdown">{{' + headers[i] + '}}</td></tr>';
+		}		
+		template = template + '<tr class="tableDetailsTr"><td></td><td>&nbsp;</td></tr>{{/.}}</tbody></table><hr>';
+		//----------------------------------------------------
+		//add line forms
+		data.lineForms = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms;		
+		//add form functions 
+		data.hasForms = function () {if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms.length > 0) return true;
+						else return false;};
+		data.hasIcon = function () {if (this.icon) return true;
+						else return false;};
+		data.group_index_num = function () {return groupIndexId};
+		data.index_num = function () {return itemIndexId};
+		//DEBUG: alert (template);
+		//render html using template and data
+		var html = Mustache.render(template, data);
+		//set the html on the page
+		$(moduleId).html(html);
+		//DEBUG:  alert(html);		
+		//Markdown with Pagedown
+		var convert = new Markdown.getSanitizingConverter().makeHtml;
+		$( ".details-markdown" ).each(function( index ) {
+			$(this).html(convert($(this).html()));
+		});
+		
 	}, 
 	renderModuleDataSimple: function(data,groupIndexId,itemIndexId,isFront){
 		/*get module id depending if is in front page*/

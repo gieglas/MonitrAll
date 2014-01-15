@@ -131,6 +131,16 @@ footer {
 
 .box-info-clrs {background: #008299; color: #ffffff; border-color: #008299;}
 
+/*Details module*/
+.tableDetails{
+	width:100%;
+}
+.tableDetailsTr{
+	border-top: 1px solid #ddd;
+}
+.tableDetailsTitle{
+	vertical-align: top;
+}
 /*action buttons*/
 ul.module-actions {
 	margin: 0;
