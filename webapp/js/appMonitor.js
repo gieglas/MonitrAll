@@ -551,7 +551,7 @@ var resultsViews = {
 	},
 	formKeyUp: function(e) {
 		//handle enter on form elements so that it does not submit form
-		if ( e.which === ENTER_KEY ) {		
+		if (( e.which === ENTER_KEY ) && !($(this).is('textarea'))) {		
 			//simulate click event on OK	
 			$('#okModal').click();
 			return false;
@@ -672,6 +672,9 @@ var resultsViews = {
 		}
 		//parley
 		$( '#'+data.form.id ).parsley();
+		//Markdown with Pagedown
+		var convert = new Markdown.getSanitizingConverter().makeHtml;
+		$(".markdown").html(convert(data.form.description));
 		//load modal
 		$('#modalGeneral').modal();
 		//focus on the first input of the form
@@ -712,6 +715,9 @@ var resultsViews = {
 		var html = Mustache.render(template, data);
 		//set the html on the page
 		$("#modulex").html(html);
+		//Markdown with Pagedown
+		var convert = new Markdown.getSanitizingConverter().makeHtml;
+		$(".module-description").html(convert(data.description));
 		//DEBUG:  alert(html);
 	}, 
 	renderModuleFrontCommon:function(data){
