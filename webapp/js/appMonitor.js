@@ -644,6 +644,7 @@ var resultsViews = {
 		data.isText= function () {return (this.type.toLowerCase() == "text"?true:false);};		
 		data.isTextArea= function () {return (this.type.toLowerCase() == "textarea"?true:false);};		
 		data.isSelect= function () {return (this.type.toLowerCase() == "select"?true:false);};
+		data.isTypehead= function () {return (this.type.toLowerCase() == "typehead"?true:false);};
 		//data.isDate= function () {return (this.type.toLowerCase() == "date"?true:false);};
 		data.isCheckList= function () {return (this.type.toLowerCase() == "checklist"?true:false);};		
 		data.isRadio= function () {return (this.type.toLowerCase() == "radio"?true:false);};		
@@ -667,12 +668,30 @@ var resultsViews = {
 		for(var i = 0; i < data.form.fields.length; i++){
 			if ( data.form.fields[i].type == 'select') {
 				$('#'+data.form.fields[i].id).val(data.form.fields[i].default_value);
+			} else if (data.form.fields[i].type == 'typehead') { 
+				//typehead
+				var datumObj = [];
+				datumObj = data.form.fields[i].options;
+				for (var j = 0; j < datumObj.length; j++){
+					datumObj[j].tokens=datumObj[j].name.split(" ");
+					datumObj[j].tokens.push(datumObj[j].value);
+				}
+				$('#'+data.form.fields[i].id).typeahead({
+				name: '#'+data.form.fields[i].id,
+				local:datumObj,
+				template: 
+				  '<p class="typehead-name">{{value}}</p><p class="typehead-description"><i class="{{icon}}"></i>{{name}}</p>'
+				,
+				limit: 50,
+				engine: Hogan
+			  });
 			} else if (data.form.fields[i].type == 'radio') { 
 				$('input:radio[name='+data.form.fields[i].id+']').val([data.form.fields[i].default_value]);
 			} else if (data.form.fields[i].type == 'checklist') {
 				$('input:checkbox[name='+data.form.fields[i].id+']').val([data.form.fields[i].default_value]);
 			}
-		}
+		}		
+
 		//parley
 		$( '#'+data.form.id ).parsley();
 		//Markdown with Pagedown

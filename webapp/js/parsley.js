@@ -49,6 +49,7 @@
       , maxcheck:       "You must select %s choices or less."
       , rangecheck:     "You must select between %s and %s choices."
       , equalto:        "This value should be the same."
+      , listofvalues:   "This value is not contained in the predefined list of values."
     },
 
     this.init( options );
@@ -162,6 +163,12 @@
         self.options.validateIfUnchanged = true;
 
         return val === $( elem ).val();
+      }
+
+      , listofvalues: function ( val, listofvalues ) {        
+        /*curstom validation of in list of values*/
+        var inArr = $.inArray( val, listofvalues.split(",") );
+        return inArr > -1;        
       }
 
       , remote: function ( val, url, self ) {

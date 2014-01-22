@@ -38,6 +38,16 @@
                 <option value="{{value}}">{{name}}</option>
               {{/options}}
             </select>{{/isSelect}}		 
+            {{! ----------------TYPEHEAD-------------------}}
+            {{#isTypehead}}
+            <input class="formInput typehead" 
+              {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}} 
+              {{#valid_minlength}}data-minlength={{valid_minlength}}{{/valid_minlength}}
+              {{#valid_maxlength}}data-maxlength={{valid_maxlength}}{{/valid_maxlength}}
+              data-trigger="change" 
+              data-listofvalues="{{#options}}{{value}},{{/options}}"
+              {{#isRequired}}data-required="true"{{/isRequired}} 
+              type="text" id="{{id}}" name={{id}} value="{{default_value}}" placeholder="{{placeholder}}" >{{/isTypehead}}
             {{! ----------------CHECKLIST-------------------}}   		
 		    		{{#isCheckList}}
               <div>

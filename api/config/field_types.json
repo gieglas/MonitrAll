@@ -2,6 +2,7 @@
 {"name":"text","value":"text"},
 {"name":"textarea","value":"textarea"},
 {"name":"select","value":"select"},
+{"name":"typehead","value":"typehead"},
 {"name":"radio","value":"radio"},
 {"name":"checklist","value":"checklist"}
 ]
