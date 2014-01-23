@@ -695,8 +695,12 @@ var resultsViews = {
 		//parley
 		$( '#'+data.form.id ).parsley();
 		//Markdown with Pagedown
-		var convert = new Markdown.getSanitizingConverter().makeHtml;
-		$(".markdown").html(convert(data.form.description));
+		// create a pagedown converter - regular and sanitized versions are both supported
+		var converter = new Markdown.getSanitizingConverter();
+		// tell the converter to use Markdown Extra
+		Markdown.Extra.init(converter, {highlighter: "highlight"});
+		$(".markdown").html(converter.makeHtml(data.form.description));
+		utils.highlightCode();
 		//load modal
 		$('#modalGeneral').modal();
 		//focus on the first input of the form
@@ -737,9 +741,13 @@ var resultsViews = {
 		var html = Mustache.render(template, data);
 		//set the html on the page
 		$("#modulex").html(html);
-		//Markdown with Pagedown
-		var convert = new Markdown.getSanitizingConverter().makeHtml;
-		$(".module-description").html(convert(data.description));
+		//Markdown with Pagedown		
+		// create a pagedown converter - regular and sanitized versions are both supported
+		var converter = new Markdown.getSanitizingConverter();
+		// tell the converter to use Markdown Extra
+		Markdown.Extra.init(converter, {highlighter: "highlight"});
+		$(".module-description").html(converter.makeHtml(data.description));
+		utils.highlightCode();
 		//DEBUG:  alert(html);
 	}, 
 	renderModuleFrontCommon:function(data){
@@ -835,10 +843,14 @@ var resultsViews = {
 		$(moduleId).html(html);
 		//DEBUG:  alert(html);		
 		//Markdown with Pagedown
-		var convert = new Markdown.getSanitizingConverter().makeHtml;
+		// create a pagedown converter - regular and sanitized versions are both supported
+		var converter = new Markdown.getSanitizingConverter();
+		// tell the converter to use Markdown Extra
+		Markdown.Extra.init(converter, {highlighter: "highlight"});
 		$( ".details-markdown" ).each(function( index ) {
-			$(this).html(convert($(this).html()));
+			$(this).html(converter.makeHtml($(this).html()));
 		});
+		utils.highlightCode();
 		
 	}, 
 	renderModuleDataSimple: function(data,groupIndexId,itemIndexId,isFront){
@@ -1039,6 +1051,5 @@ $(document).ready(function () {
 	  	if (ajaxRunCount <= 0) $('#refreshIcon').hide();	    
 	  },
 	  success: function() {}
-	});
-	
+	});	
 });
