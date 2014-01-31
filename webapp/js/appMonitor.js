@@ -803,7 +803,7 @@ var resultsViews = {
 		$(moduleId).html(html);
 		//DEBUG:  alert(html);
 		//datatable
-		if (data.length > 0) {
+		if ((data.length > 0) && (!isFront)){
 			$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25});
 		}		
 	},
@@ -960,6 +960,10 @@ var resultsViews = {
 	renderModuleDataCharts: function(data,ui_type,groupIndexId,itemIndexId,isFront){
 		/*get module id depending if is in front page*/
 		var moduleId = '#module-data' + (isFront?groupIndexId+'_'+itemIndexId:'');
+		if (!isFront) {
+			resultsViews.renderModuleDataTable(data,groupIndexId,itemIndexId,isFront);
+		}
+		
 		/*get chartplaceholder id depending if is in front page*/
 		var chartplaceholderId = 'chartplaceholder' + (isFront?groupIndexId+'_'+itemIndexId:'');
 		var chartData = [];
@@ -1000,7 +1004,7 @@ var resultsViews = {
 			}
 		}		
 		//set the html on the page
-		$(moduleId).html('<div id="' + chartplaceholderId + '" class="span12" style="height:300px;background-color: #ffffff;"></div>');
+		$(moduleId).prepend('<div id="' + chartplaceholderId + '" class="span12" style="height:300px;background-color: #ffffff;"></div>');
 		//load plot chart
 		$.plot($("#"+chartplaceholderId), dataSet, options);		
 
