@@ -1023,7 +1023,8 @@ var resultsViews = {
 	                var y = item.datapoint[1];
 	                
 	                utils.showTooltip(item.pageX, item.pageY,
-	                            item.series.label + " = " + y);
+	                            item.series.xaxis.ticks[item.dataIndex].label + " = " + y);
+	                //item.series.label
 	            }
 	        }
 	        else {
