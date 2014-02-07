@@ -881,7 +881,10 @@ var resultsViews = {
 		// these ui types are only different by the template
 		//get template from html
 		switch (ui_type) {
-		case 'Percent':
+		case 'Percent':			
+			if (!isFront) {
+				resultsViews.renderModuleDataTable(data,groupIndexId,itemIndexId,isFront);
+			}
 			template =$('#modulePercentTmpl').html();
 			break;
 		case 'Boxes':
@@ -947,7 +950,11 @@ var resultsViews = {
 		//render html using template and data
 		var html = Mustache.render(template, data);
 		//set the html on the page
-		$(moduleId).html(html);
+		if (ui_type == 'Percent') {
+			$(moduleId).prepend(html);
+		} else {
+			$(moduleId).html(html);
+		}		
 		//DEBUG:  alert(html);
 		//datatable
 		if ((ui_type == 'ConditionTable') && (!isFront)) {		
