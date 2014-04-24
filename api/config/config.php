@@ -88,6 +88,15 @@ $db_connections = array (
 		"name" => "", 
 		"provider" => "EXECUTE"
 	), 
+	"monitrallusersdb" => array (
+		"id" => "monitrallusersdb",
+		"server" => "localhost",		
+		"port" => "",
+		"user" => "phploginonefile",
+		"pass" => "Passw0rd",
+		"name" => "phploginonefile", 
+		"provider" => "mysql"
+	), 
 	"monitralldb" => array (
 		"id" => "monitralldb",
 		"server" => "localhost",		

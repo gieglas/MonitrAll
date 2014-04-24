@@ -127,6 +127,10 @@ var appRouter = {
 	        	MonitorAllApp.currentParams = [];      	
 				appRouter.doHome();	        	
 	        });
+			//login
+			this.get('#login', function() {
+				window.location.replace('webapp/login/');
+			});
 	        //results
 	        this.get('#results/:groupIndexId/:itemIndexId', function() {	        
 	        	var dataIn=[];
