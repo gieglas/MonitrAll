@@ -2,7 +2,7 @@
 <html lang="en">
   <?php session_start(); 
 	if (empty($_SESSION['user_name']) || (!$_SESSION['user_is_logged_in'])) {
-		header('Location: webapp/login/' , true, ($permanent === true) ? 301 : 302);
+		include('webapp/login/redirect.php'); 
 	}
   ?>
   <?php include_once('webapp/tmpl/globalHead.tmpl'); ?>  

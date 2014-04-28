@@ -8,6 +8,36 @@
     <meta name="author" content="">
     <!-- Le styles -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css">
+      body {
+        background-color: #d3d4d6;
+      }
+
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .form-signin {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+
+    </style>
     <link href="../css/bootstrap-responsive.min.css" rel="stylesheet">
 	    <!-- Fav and touch icons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../img/apple-touch-icon-144x144-precomposed.png">
@@ -25,17 +55,15 @@
       </div>
     </div>
 		
-		<div class="container-fluid">
-			<div class="row-fluid">
-				<div class="span12">
+		<div class="container">			
+				<div class="form-signin">
 
 <?php
 require_once("libraries/OneFileLoginApplication.php");
 // run the application
 $application = new OneFileLoginApplication();
 ?>			
-				</div>
-			</div>
+				</div>			
 		</div>
 	<script src="../js/bootstrap.min.js"></script>    
   </body>
