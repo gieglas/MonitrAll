@@ -354,7 +354,7 @@ function _getOpenPDOConnection($connection) {
 		break;
 	case "oci":
 		$tns = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = ".$myServer.")(PORT = ".$myPort.")))(CONNECT_DATA=(SID=".$myDB.")))"; 
-		$connStr = "oci:dbname=".$tns; 		
+		$connStr = "oci:dbname=".$tns.";charset=utf8"; 		
 		$conn = new PDO($connStr,$myUser,$myPass);	
 		$conn->setAttribute(PDO::ATTR_AUTOCOMMIT,TRUE);		
 		break;
