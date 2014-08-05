@@ -128,7 +128,19 @@ ORDER BY display_order ASC"
 		"id" => "MonitrallUpdateNotifications",		
 		"connection" => "monitralldb",
 		"query" => "UPDATE results SET next_notify_date = :nextDateIn WHERE id = :idIn"
+	),
+	"MonitrallInsertStats" => array(
+		"id" => "MonitrallInsertStats",		
+		"connection" => "monitralldb",
+		"query" => "INSERT INTO stats (stat_id,result_id,name,value) VALUES (:stats_id,:result_id,:name,:value)"
+	),
+	"MonitrallMaxStatId" => array(
+		"id" => "MonitrallMaxStatId",		
+		"connection" => "monitralldb",
+		"query" => "SELECT IFNULL(MAX( stat_id ) +1,0) as Max_id FROM  stats"
 	)
+	
+
 );
 
 ?>

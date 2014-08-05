@@ -358,6 +358,23 @@ INSERT INTO `results` (`id`, `name`, `index_num`, `group_index_num`, `descriptio
 ('TestSimple', 'Test Simple', NULL, NULL, 'Test Simple data.', 'Test', 'Simple', 0, 1, 'WebService', '==', '0', '>', '1', '==', '1', '../data/testdata.json', NULL, '', 2, 0, '', 0, '0000-00-00 00:00:00', NULL, 1, '2013-09-12 08:03:58', '2014-01-07 12:24:33'),
 ('TestTable', 'Test Table', NULL, NULL, 'Test full table', 'Test', 'Table', 0, 1, 'WebService', '==', '0', '>', '1', '==', '1', '../data/testdata.json', NULL, '', 0, 0, '', 0, '0000-00-00 00:00:00', NULL, 1, '2013-09-12 08:00:58', '2014-01-07 11:47:59');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stats`
+--
+
+CREATE TABLE IF NOT EXISTS `stats` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Unique id',
+  `stat_id` bigint(20) NOT NULL COMMENT 'Statistics id',
+  `result_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Result id',
+  `result_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Result date time ',
+  `name` varchar(3000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Name from result',
+  `value` varchar(3000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Value from result',
+  PRIMARY KEY (`id`),
+  KEY `stat_id` (`stat_id`,`result_id`,`result_date`,`name`(255),`value`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Statistics are saved' AUTO_INCREMENT=1 ;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
