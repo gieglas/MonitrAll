@@ -51,7 +51,6 @@ C:\Code\xampp\php\php.exe - f C:\Users\cevangelou\Dropbox\Gov\htdocs\monitrall\a
 */
 
 require_once 'common.php';
-require_once '../lib/swift/swift_required.php';
 //check that this is run from te command line
 if (!_is_cli()) {
 	echo "This script can only be run from the command line";
