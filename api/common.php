@@ -716,7 +716,7 @@ function _printCompareResult($reportRes,$bodyTop ="",$bodyBottom=""){
 }
 //-------------------------------------------------------------
 //-------PRIVATE
-function _sendNotificationEmail($reportRes){
+function _sendNotificationEmail($reportRes,$eMails=null){
 	global $monitrall_options;
 	global $monitrall_notifications_options;
 	// Create the SMTP configuration
@@ -727,7 +727,12 @@ function _sendNotificationEmail($reportRes){
 	//$message->setTo();
 	//$message->setCc();
 	$message->setContentType("text/html");
-	$message->setBcc($monitrall_notifications_options["email"]["to"]);
+	//if eMails are set on command prompt then send to those else to default	
+	if ($eMails) {
+		$message->setBcc(explode(",",$eMails));
+	} else {
+		$message->setBcc($monitrall_notifications_options["email"]["to"]);
+	}
 	$message->setSubject(_replaceSpecialTags($monitrall_notifications_options["email"]["subject"]));
 	$message->setBody(_printCompareResult($reportRes,$monitrall_notifications_options["email"]["bodytop"],$monitrall_notifications_options["email"]["bodybottom"]));
 	$message->setFrom($monitrall_notifications_options["email"]["from"]);	
