@@ -138,6 +138,16 @@ ORDER BY display_order ASC"
 		"id" => "MonitrallMaxStatId",		
 		"connection" => "monitralldb",
 		"query" => "SELECT IFNULL(MAX( stat_id ) +1,0) as Max_id FROM  stats"
+	),
+	"MonitrallInsertChecks" => array(
+		"id" => "MonitrallInsertChecks",		
+		"connection" => "monitralldb",
+		"query" => "INSERT INTO checks (check_id,result_id,has_red,has_orange,has_green,has_no_values) VALUES (:check_id,:result_id,:has_red,:has_orange,:has_green,:has_no_values)"
+	),
+	"MonitrallMaxCheckId" => array(
+		"id" => "MonitrallMaxCheckId",		
+		"connection" => "monitralldb",
+		"query" => "SELECT IFNULL(MAX( check_id ) +1,0) as Max_id FROM  checks"
 	)
 	
 
