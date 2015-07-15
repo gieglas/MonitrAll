@@ -120,72 +120,91 @@ var appRouter = {
 	//all things needed to initialize the views
 	//------------------INIT-----------------------------
 	init: function() {
-		 // Client-side routes    
-	    Sammy(function() {
-	        //home
-	        this.get('#home', function() {	  
-	        	MonitorAllApp.currentParams = [];      	
-				appRouter.doHome();	        	
-	        });
+        // Client-side routes    
+        Sammy(function() {
+            //home
+            this.get('#home', function() {
+                MonitorAllApp.currentParams = [];
+                appRouter.doHome();
+            });
 			//login
 			this.get('#login', function() {
 				window.location.replace('webapp/login/');
 			});
-	        //results
-	        this.get('#results/:groupIndexId/:itemIndexId', function() {	        
-	        	var dataIn=[];
-	        	//get parameteres (for filtering)
-	        	for (var param in this.params.toHash()) {
-	        		//other than the groupid and itemid
-	        		if ((param != 'groupIndexId') && (param != 'itemIndexId')){
-	        			dataIn.push({"name":param,"value":this.params[param]});
-	        		}	        		
-	        	}
-	        	//set parameters to be used in other functions
-	        	MonitorAllApp.currentParams = dataIn;
-        		appRouter.doResults(this.params.groupIndexId,this.params.itemIndexId,dataIn);	        	
-	        });
-	        //filter results 
-	        this.get('#results/:groupIndexId/:itemIndexId/:filterName', function() {	        
-	        	var dataIn=[];
-	        	//add in data in the filtername first
-	        	dataIn.push({"name":"filterName","value":this.params.filterName});
-	        	//get parameteres (for filtering)
-	        	for (var param in this.params.toHash()) {
-	        		//other than the groupid and itemid
-	        		if ((param != 'groupIndexId') && (param != 'itemIndexId') && (param != 'filterName')){
-	        			dataIn.push({"name":param,"value":this.params[param]});
-	        		}	        		
-	        	}
-	        	//set parameters to be used in other functions
-	        	MonitorAllApp.currentParams = dataIn;
-        		appRouter.doResults(this.params.groupIndexId,this.params.itemIndexId,dataIn);	        	
-	        });
-	        //about
-	        this.get('#about', function() {
-	        	MonitorAllApp.currentParams = [];
-	        	//hide any messages from previous actions
-	            utils.closeMessage();
-	            utils.hideModal();
-	            alert( 'this is about');            
-	        });
-	        //default
-	        this.get('', function() { this.app.runRoute('get', '#home') });
-	    }).run();
+			//results with Name -----------
+			this.get('#results/:iteminid', function() {
+                var dataIn=[];
+                //get parameteres (for filtering)
+                for (var param in this.params.toHash()) {
+                    //other than the iteminid
+                    if (param != 'iteminid') {
+                        dataIn.push({"name":param,"value":this.params[param]});
+                    }
+                }
+                //set parameters to be used in other functions
+                MonitorAllApp.currentParams = dataIn;
+                //call doResults with only 2 agruments
+                appRouter.doResults(this.params.iteminid,dataIn);
+			}); 
+			//--------------------------------------
+            //results
+            /*this.get('#results/:groupIndexId/:itemIndexId', function() {
+                var dataIn=[];
+                //get parameteres (for filtering)
+                for (var param in this.params.toHash()) {
+                    //other than the groupid and itemid
+                    if ((param != 'groupIndexId') && (param != 'itemIndexId')){
+                        dataIn.push({"name":param,"value":this.params[param]});
+                    }
+                }
+                //set parameters to be used in other functions
+                MonitorAllApp.currentParams = dataIn;
+                appRouter.doResults(this.params.groupIndexId,this.params.itemIndexId,dataIn);
+            });*/
+            //filter results 
+            //this.get('#results/:groupIndexId/:itemIndexId/:filterName', function() {
+            this.get('#results/:iteminid/:filterName', function() {
+                var dataIn=[];
+                //add in data in the filtername first
+                dataIn.push({"name":"filterName","value":this.params.filterName});
+                //get parameteres (for filtering)
+                for (var param in this.params.toHash()) {
+                    //other than the iteminid
+                    if (param != 'iteminid') {
+                        dataIn.push({"name":param,"value":this.params[param]});
+                    }
+                }
+                
+                //set parameters to be used in other functions
+                MonitorAllApp.currentParams = dataIn;
+                //call doResults with only 2 agruments
+                appRouter.doResults(this.params.iteminid,dataIn);
+            });
+            //about
+            this.get('#about', function() {
+                MonitorAllApp.currentParams = [];
+                //hide any messages from previous actions
+                utils.closeMessage();
+                utils.hideModal();
+                alert( 'this is about');            
+            });
+            //default
+            this.get('', function() { this.app.runRoute('get', '#home') });
+        }).run();
 	},
 	//------------------ACTIONS FUNCTIONS-----------------------------
 	doHome: function () {
 		//chech if ajax is running
 		if (ajaxRunCount <= 0) {
 			//DEBUG: alert('this is home');
-		    //hide any messages from previous actions
-		    utils.closeMessage();
-		    utils.hideModal();
-		    //render the breadcrumb
+            //hide any messages from previous actions
+            utils.closeMessage();
+            utils.hideModal();
+            //render the breadcrumb
 			resultsViews.renderBreadcrumbs({"parents":[],"current":"Home"});  
-		    //get data with ajax
-		    appRouter.getResultsGroupList()        						
-			//Clear Content 	
+            //get data with ajax
+            appRouter.getResultsGroupList();
+            //Clear Content
 			$("#modulex").html("");		
 			//render the front commons
 			resultsViews.renderModuleFrontCommon(resultsGroupsModel.frontPageData);
@@ -194,37 +213,50 @@ var appRouter = {
 				appRouter.getResults(resultsGroupsModel.frontPageData[i].group_index_num,resultsGroupsModel.frontPageData[i].index_num,true,[])
 			}
 		}else {
-    		utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
-    	}		
+            utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
+        }		
 	}, 
-	doResults: function(groupIndexId,itemIndexId,dataIn) {
+	doResults: function(arg1,arg2) {
+        //the function can be called as follows :
+        // doResults(resultId,dataIn)
+        var groupIndexId = null;
+        var itemIndexId = null;
+        var dataIn =null;
+
 		//chech if ajax is running
 		if (ajaxRunCount <= 0) {
 			//DEBUG: alert( 'this is results' + groupIndexId + ' ' + itemIndexId); 
-		    //hide any messages from previous actions
-		    utils.closeMessage();
-		    utils.hideModal();
-		    //if the model data re not filled fill them 
-		    if (resultsGroupsModel.groupsData == null) {
-		    	appRouter.getResultsGroupList();		    	
-		    }
-		    //render the breadcrumb
-		    //:TODO better breadcrumb
-		    breadcrumbData={"parents":[{"name":"Home","url":"#"}],"current":resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].name}
+            //hide any messages from previous actions
+            utils.closeMessage();
+            utils.hideModal();
+            //if the model data re not filled fill them 
+            if (resultsGroupsModel.groupsData == null) {
+                appRouter.getResultsGroupList();
+            }
+            
+            //get groupIndexId and itemIndexId from the id that was passed
+            var inItem=resultsGroupsModel.getItemById(arg1);
+            groupIndexId = inItem.group_index_num;
+            itemIndexId = inItem.index_num;
+            dataIn = arg2;
+            
+            //render the breadcrumb
+            //:TODO better breadcrumb
+            breadcrumbData={"parents":[{"name":"Home","url":"#"}],"current":resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].name}
 			resultsViews.renderBreadcrumbs(breadcrumbData);
 			//set activeList on sidebar element
 			$(".activeList").removeClass("activeList");
 			$('#accordion'+groupIndexId+itemIndexId).addClass('activeList');	
 			//accordeon open hack
-	    	$(".in").removeClass("in");
+            $(".in").removeClass("in");
 			$('#collapse'+groupIndexId).addClass('in');	
 			//render the modules commons , name desc etc
 			resultsViews.renderModuleCommon(resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId]);
-		    //finally get data with ajax
-		    appRouter.getResults(groupIndexId,itemIndexId,false,dataIn);  
+            //finally get data with ajax
+            appRouter.getResults(groupIndexId,itemIndexId,false,dataIn);  
 		}else {
-    		utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
-    	}			
+            utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
+        }			
 	},
 	doForm: function(groupIndexId,itemIndexId,formIndexId,scope,lineid){
 		//chech if ajax is running
@@ -246,12 +278,12 @@ var appRouter = {
 				}
 				var targetForm  = "";
 				//get form target based on scope
-		    	if (scope == "results") {
-		    		targetForm = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].forms[formIndexId];	
-		    	} else if (scope == "line") {
-		    		targetForm = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms[formIndexId];
-		    	}			
-		    	//get targetItem
+                if (scope == "results") {
+                    targetForm = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].forms[formIndexId];	
+                } else if (scope == "line") {
+                    targetForm = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms[formIndexId];
+                }			
+                //get targetItem
 				var targetItem = resultsGroupsModel.getItemById(targetForm.target);
 				//perform filter without showing the form
 				appRouter.doFilter(targetItem.group_index_num,targetItem.index_num,targetForm.id,dataIn);
@@ -278,7 +310,7 @@ var appRouter = {
 					//get result headers from json object 
 					var headers = utils.getHeaders(formDefaults);
 					//for all values returned by formDelfaults 
-					for(var i = 0; i < headers.length; i++){					
+                    for(var i = 0; i < headers.length; i++){
 						//for all fields in form object
 						for(var j = 0; j < formData.form.fields.length; j++){
 							//if the header of the result is same as the id of the filed
@@ -300,13 +332,14 @@ var appRouter = {
 			}
 			
 		}else {
-    		utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
-    	}
+            utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
+        }
 	},
 	doFilter:function(groupIndexId,itemIndexId,formId,dataIn){
-		var location_url="#results/"+groupIndexId+"/"+itemIndexId+(dataIn.length>0?"/"+formId:"");		
+	    
+		var location_url="#results/"+resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].id+(dataIn.length>0?"/"+formId:"");		
 		for(var i = 0; i < dataIn.length; i++){
-			location_url+=(i==0?'?':'&')+dataIn[i].name+'='+dataIn[i].value;
+            location_url+=(i==0?'?':'&')+dataIn[i].name+'='+dataIn[i].value;
 		}
 		window.location=location_url;
 	},
@@ -321,7 +354,7 @@ var appRouter = {
 			url: url, //use the api
 			//this is a special case. This ajax call gets the data for our
 			// model so it need to finish before we can do anything else
-        	async: false,
+            async: false,
 			dataType: "json",
 			data: JSON.stringify(dataIn),
 			success: function(data) {
@@ -343,7 +376,7 @@ var appRouter = {
 			url: 'api/getResultsGroupList', //use the api
 			//this is a special case. This ajax call gets the data for our
 			// model so it need to finish before we can do anything else
-        	async: false,
+            async: false,
 			dataType: "json",
 			success: function(data) {
 				//use global response function				
@@ -354,8 +387,8 @@ var appRouter = {
 			}
 		});			
     },
-    getResults:function(groupIndexId,itemIndexId,isFront,dataIn){    	
-    	// ajax request		
+    getResults:function(groupIndexId,itemIndexId,isFront,dataIn){
+        // ajax request
 		$.ajax({
 			type: 'POST',
 			cache: false,
@@ -374,8 +407,8 @@ var appRouter = {
 			}
 		});		
     },
-    processForm:function(groupIndexId,itemIndexId,formIndexId,dataIn){    		    	
-    	//ajax request		
+    processForm:function(groupIndexId,itemIndexId,formIndexId,dataIn){
+        //ajax request		
 		$.ajax({
 			type: 'POST',
 			cache: false,
@@ -394,7 +427,7 @@ var appRouter = {
 		});
     },
     syncServices:function(dataIn,groupIndexId,itemIndexId,formIndexId,isFront) {
-    	//ajax request		
+        //ajax request		
 		$.ajax({
 			type: 'POST',
 			cache: false,
@@ -417,23 +450,23 @@ var appRouter = {
     },
     //------------------RESPONSE FUNCTIONS-----------------------------
     responseResponse:function(name,data,groupIndexId,itemIndexId,formIndexId,isFront) {
-    	currentResultData = data;
-    	switch (name) {
-    		case 'getResultsGroupList':
-    			//update the model
+        currentResultData = data;
+        switch (name) {
+            case 'getResultsGroupList':
+                //update the model
 				resultsGroupsModel.groupsData = data;
 				resultsGroupsModel.getFrontPageItems();
 				//render the view
 				resultsViews.renderResultsSideBar(resultsGroupsModel.groupsData);
-    		break;
-    		case 'getResults':
-    			//render the view
+            break;
+            case 'getResults':
+                //render the view
 				//depending on the ui_type render the correct view
 				//DEBUG: alert(resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].ui_type);
 				switch (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].ui_type)
 				{
 				case 'Percent':
-				 	resultsViews.renderModuleDataConditionals(data,'Percent',groupIndexId,itemIndexId,isFront);
+                    resultsViews.renderModuleDataConditionals(data,'Percent',groupIndexId,itemIndexId,isFront);
 					break;
 				case 'Table':
 					resultsViews.renderModuleDataTable(data,groupIndexId,itemIndexId,isFront);
@@ -466,9 +499,9 @@ var appRouter = {
 					resultsViews.renderModuleDataSimple(data,groupIndexId,itemIndexId,isFront);
 				}
 				//no update fot the model needed
-    		break;
-    		case 'processForm':
-    			if (data.success) {
+            break;
+            case 'processForm':
+                if (data.success) {
 					utils.showMessage('Success', 'Form processed succesfully','alert-success');
 					utils.hideModal();
 				} else {
@@ -476,8 +509,8 @@ var appRouter = {
 					utils.hideModal();
 				}				
 				//alert(data);
-    		break;
-    	}
+            break;
+        }
     }
 }
 
@@ -512,16 +545,15 @@ var resultsViews = {
 	},
 	//------------------EVENT FUNCTIONS-----------------------------
 	showMenu: function(){		
-	    $('#content').toggleClass('span12 span9');			
-	    $('#sidebar').toggleClass('hide span3');
+        $('#content').toggleClass('span12 span9');			
+        $('#sidebar').toggleClass('hide span3');
 		return false;
 	},
 	refreshModuleClick: function() {
 		// get the groupId and itemId
-		var groupId = $(this).data('group');	
-		var itemId = $(this).data('item');	
-		//:DEBUG alert('group:' + groupId + ' item:' + itemId);
-		appRouter.doResults(groupId,itemId,MonitorAllApp.currentParams);
+		var iteminid = $(this).data('id');	
+		//:DEBUG alert('id:' + iteminid );
+		appRouter.doResults(iteminid,MonitorAllApp.currentParams);
 		return false;
 	},
 	csvDownloadClick: function() {
@@ -588,49 +620,49 @@ var resultsViews = {
 			//-----------------HANDLE FORM-----------------------
 			if (formtype == "form") {
 				//prepare form data
-		    	//Use syncServices for synchronous process
-		    	var syncServicesData = [];
-		    	var syncService = {"data":null,"name":null};
-		    	// define processForm service request
-		    	syncService.name = "processForm"
-		    	syncService.data = {"data":null,"name":null};
-		    	syncService.data.data = arr;
-		    	if (lineid) {
-		    		syncService.data.data.push({"name":"lineid","value":lineid});
-		    	}
-		    	//define form scope
-		    	if (scope == "results") {
-		    		syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].forms[formnum].id;	
-		    	} else if (scope == "line") {
-		    		syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].lineForms[formnum].id;
-		    	}			
+                //Use syncServices for synchronous process
+                var syncServicesData = [];
+                var syncService = {"data":null,"name":null};
+                // define processForm service request
+                syncService.name = "processForm"
+                syncService.data = {"data":null,"name":null};
+                syncService.data.data = arr;
+                if (lineid) {
+                    syncService.data.data.push({"name":"lineid","value":lineid});
+                }
+                //define form scope
+                if (scope == "results") {
+                    syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].forms[formnum].id;	
+                } else if (scope == "line") {
+                    syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].lineForms[formnum].id;
+                }			
 				//push service request to queue
 				syncServicesData.push(syncService);
 				// define getResults service request
 				syncService = {"data":null,"name":null};
-		    	syncService.name = "getResults"
-		    	syncService.data = {"data":null,"name":null};
-		    	syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].id;
-		    	//set the current parameters
-		    	syncService.data.data = MonitorAllApp.currentParams;
-		    	//push service request to queue
+                syncService.name = "getResults";
+                syncService.data = {"data":null,"name":null};
+                syncService.data.name = resultsGroupsModel.groupsData[groupnum].items[itemnum].id;
+                //set the current parameters
+                syncService.data.data = MonitorAllApp.currentParams;
+                //push service request to queue
 				syncServicesData.push(syncService);	
 				appRouter.syncServices(syncServicesData,groupnum,itemnum,formnum,false);
 			//-----------------HANDLE FILTER-----------------------
 			} else if (formtype == "filter") {
 				var targetForm  = "";
 				//get form target based on scope
-		    	if (scope == "results") {
-		    		targetForm = resultsGroupsModel.groupsData[groupnum].items[itemnum].forms[formnum];	
-		    	} else if (scope == "line") {
-		    		targetForm = resultsGroupsModel.groupsData[groupnum].items[itemnum].lineForms[formnum];
-		    	}			
-		    	//get targetItem
+                if (scope == "results") {
+                    targetForm = resultsGroupsModel.groupsData[groupnum].items[itemnum].forms[formnum];	
+                } else if (scope == "line") {
+                    targetForm = resultsGroupsModel.groupsData[groupnum].items[itemnum].lineForms[formnum];
+                }
+                //get targetItem
 				var targetItem = resultsGroupsModel.getItemById(targetForm.target);
 				// if there is defined a line id add to the parameters
 				if (lineid) {
-		    		arr.push({"name":"lineid","value":lineid});
-		    	}
+                    arr.push({"name":"lineid","value":lineid});
+                }
 				appRouter.doFilter(targetItem.group_index_num,targetItem.index_num,targetForm.id,arr);
 			}
 			
@@ -688,7 +720,7 @@ var resultsViews = {
 				,
 				limit: 50,
 				engine: Hogan
-			  });
+                });
 			} else if (data.form.fields[i].type == 'radio') { 
 				$('input:radio[name='+data.form.fields[i].id+']').val([data.form.fields[i].default_value]);
 			} else if (data.form.fields[i].type == 'checklist') {
@@ -735,11 +767,11 @@ var resultsViews = {
 		//add function to get if the module has forms
 		data.hasForms = function () {
 				if (this.forms.length > 0) return true;
-				 else return false;
+                 else return false;
 			}
 		data.hasIcon = function (){
 				if (this.icon) return true;
-				 else return false;
+                 else return false;
 		}			
 		//render html using template and data
 		var html = Mustache.render(template, data);
@@ -782,7 +814,7 @@ var resultsViews = {
 		}		
 		template = template + '</tr></thead><tbody>{{#.}}<tr>';
 		//fill in template the data
-		for(var i = 0; i < headersLength; i++){
+        for(var i = 0; i < headersLength; i++){
 			template = template +'<td>{{' + headers[i] + '}}</td>';
 		}
 		//for forms and not front
@@ -893,7 +925,7 @@ var resultsViews = {
 			break;
 		case 'Boxes':
 			template =$('#moduleBoxesTmpl').html();
-			break		
+			break;
 		case 'ConditionTable':
 			template =$('#moduleConditionTableTmpl').html();
 			break;
@@ -987,11 +1019,11 @@ var resultsViews = {
 				dataSet[i] = {label:data[i].name,data:Number(data[i].value),color:null};
 			}
 			options = {
-    			series: {pie: {show: true}}
+                series: {pie: {show: true}}
 			};
 		} else if ((ui_type =='LineChart') || (ui_type =='BarChart') || (ui_type =='FillChart')) {
 			// convert into flot charts data
-			for(var i = 0; i < data.length; i++){
+            for(var i = 0; i < data.length; i++){
 				//all values are converted to numbers
 				chartData[i] = [i, Number(data[i].value)];
 				ticks[i] = [i, data[i].name];
@@ -1058,14 +1090,14 @@ $(document).ready(function () {
 	resultsViews.init();	
 	$('#refreshIcon').hide();
 	jQuery.ajaxSetup({
-	  beforeSend: function() {
-	  	ajaxRunCount++;	  	
-	  	$('#refreshIcon').show();	    
-	  },
-	  complete: function(){
-	  	ajaxRunCount--;
-	  	if (ajaxRunCount <= 0) $('#refreshIcon').hide();	    
-	  },
-	  success: function() {}
+        beforeSend: function() {
+            ajaxRunCount++;	
+            $('#refreshIcon').show();
+        },
+        complete: function(){
+            ajaxRunCount--;
+            if (ajaxRunCount <= 0) $('#refreshIcon').hide();
+        },
+        success: function() {}
 	});	
 });

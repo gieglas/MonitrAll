@@ -71,7 +71,7 @@ $monitrall_results_config = array(
 		"id" => "MonitrallFieldsByForm",		
 		"connection" => "monitralldb",
 		"query" => "SELECT id, form_id, title, placeholder, type , default_value, option_url, required, valid_test, valid_minlength, valid_maxlength, display_order
-FROM FIELDS 
+FROM fields 
 WHERE form_id = :formid
 AND enabled =1
 ORDER BY display_order ASC"		

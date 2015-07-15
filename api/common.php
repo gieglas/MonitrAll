@@ -659,6 +659,7 @@ function _getResultCompareData($name) {
 	//create result obj
 	$resultDataArrObj=new stdClass();
 	$resultDataArrObj->name=$res[$name]["name"];
+	$resultDataArrObj->id=$name;
 	$resultDataArrObj->description=$res[$name]["description"];
 	$resultDataArrObj->hasRed=$hasRed;
 	$resultDataArrObj->hasGreen=$hasGreen;
@@ -693,7 +694,7 @@ function _printCompareResult($reportRes,$bodyTop ="",$bodyBottom=""){
 	$htmlOut.= $bodyTop;
 	//print results 
 	foreach ($reportRes as $obj ) {
-		$htmlOut.= ("<h4 style='font-size: 17.5px;margin: 10px 0;font-family: inherit;font-weight: bold;line-height: 20px;'>".$obj->name."</h4>");
+		$htmlOut.= ("<h4 style='font-size: 17.5px;margin: 10px 0;font-family: inherit;font-weight: bold;line-height: 20px;'><a href='".$monitrall_options["webaddress"]."/#results/".$obj->id."'>".$obj->name."</a></h4>");
 		$htmlOut.= ("<div>".$obj->description."</div>");
 		$htmlOut.= ("<br><table style='width: 100%;' cellpadding='0' cellspacing='0' border='0'>");
 		$htmlOut.= ("<thead><tr><th>Value</th><th>Name</th></tr></thead>");

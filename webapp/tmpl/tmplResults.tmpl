@@ -7,7 +7,7 @@
       </div>
       <div id="collapse{{index_num}}" class="accordion-body collapse">
         <div class="accordion-inner">
-          <ul>{{#items}}<li class="view" id="accordion{{group_index_num}}{{index_num}}"><a href="#results/{{group_index_num}}/{{index_num}}">{{name}}</a></li>{{/items}}</ul>
+          <ul>{{#items}}<li class="view" id="accordion{{group_index_num}}{{index_num}}"><a href="#results/{{id}}">{{name}}</a></li>{{/items}}</ul>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
     <script id="moduleTmpl" type="text/template">
       <div class="clearfix">
         <div class="pull-left"><h4>{{name}}</h4></div>        
-        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
+        <div class="pull-right"><a href="#" data-id="{{id}}" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
         <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn csv-button">CSV</a></div>
         <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn json-button">JSON</a></div>
       </div>
@@ -45,7 +45,7 @@
       </div>
       {{#.}}
       <div class="module span4">
-      <a href="#results/{{group_index_num}}/{{index_num}}"><h4>{{name}}</h4></a>
+      <a href="#results/{{id}}"><h4>{{name}}</h4></a>
       <div id="module-data{{group_index_num}}_{{index_num}}"></div>         
       </div>
       {{/.}}
