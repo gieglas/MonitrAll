@@ -375,6 +375,100 @@ CREATE TABLE IF NOT EXISTS `stats` (
   KEY `stat_id` (`stat_id`,`result_id`,`result_date`,`name`(255),`value`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Statistics are saved' AUTO_INCREMENT=1 ;
 
+
+CREATE TABLE `checks` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `check_id` bigint(20) NOT NULL COMMENT 'Check Id',
+  `result_id` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Result Id',
+  `check_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Check date',
+  `has_red` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Has red in conditions met',
+  `has_orange` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Has green in conditions met',
+  `has_green` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Has orange in conditions met',
+  `has_no_values` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Has no values returned',
+  PRIMARY KEY (`id`),
+  KEY `check_id` (`check_id`,`result_id`,`check_date`),
+  KEY `has_red` (`has_red`,`has_orange`,`has_green`,`has_no_values`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Table where automated checks are kept';
+
+
+CREATE TABLE `dashboards` (
+  `id` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `index_num` bigint(20) DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `display_order` bigint(20) NOT NULL DEFAULT '0' COMMENT 'The order to be displayed',
+  `enabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Set 1 to enable',
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Insert date time',
+  `update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Update date time',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Defines the Dashboards';
+
+CREATE TABLE `dashresults` (
+	`dash_id` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Dashboard Id',
+    `result_id` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Result Id',
+	`display_order` bigint(20) NOT NULL DEFAULT '0' COMMENT 'The order to be displayed',
+    `update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Update date time',
+    PRIMARY KEY (`dash_id`,`result_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Connects Dashboards with result id';
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `dashresults`;
+--
+ALTER TABLE `dashresults`
+  ADD CONSTRAINT `dashresults_ibfk_2` FOREIGN KEY (`result_id`) REFERENCES `results` (`id`),
+  ADD CONSTRAINT `dashresults_ibfk_1` FOREIGN KEY (`dash_id`) REFERENCES `dashboards` (`id`);
+
+-- administration ammendement for dashboards
+
+INSERT INTO `results` (`id`, `name`, `index_num`, `group_index_num`, `description`, `group_id`, `ui_type`, `frontpage`, `display`, `connection`, `condition_green_operator`, `condition_green_value`, `condition_orange_operator`, `condition_orange_value`, `condition_red_operator`, `condition_red_value`, `query`, `filter_query`, `datafile`, `display_order`, `notify_enable`, `notify_freq`, `notify_interval`, `start_notify_date`, `next_notify_date`, `enabled`, `insert_date`, `update_date`) VALUES
+('AdminDashModule', 'Dashboards', NULL, NULL, 'Edit the Dashboard Modules.', 'administration', 'Table', 0, 1, 'monitralldb', '', '', '', '', '', '', 'SELECT a.display_order, a.name, a.id as lineid, a.description, a.enabled \r\n, (select count(*) from dashresults c where c.dash_id = a.id) as results \r\n FROM dashboards a;', NULL, '', 18, 0, NULL, NULL, NULL, NULL, 1, '2013-09-11 12:23:17', '2013-09-11 12:23:17'),
+('AdminDashLine', 'Dashboard Line', NULL, NULL, 'Used when editing a line', 'administration', 'Table', 0, 0, 'monitralldb', '', '', '', '', '', '', 'SELECT id as idIn, name as nameIn, description as descriptionIn, display_order as display_orderIn, enabled as enabledIn \r\nfrom dashboards \r\nwhere id = :lineid\r\norder by display_order asc', NULL, '', 19, 0, NULL, NULL, NULL, NULL, 1, '2013-09-11 12:24:32', '2013-09-11 12:33:48'),
+('AdminDashResultsModule', 'Dash Results', NULL, NULL, 'Edit the Dashboard Results Modules.', 'administration', 'Table', 0, 1, 'monitralldb', '', '', '', '', '', '', 'select a.display_order, concat(a.dash_id,\'---->\',a.result_id) lineid from dashresults a order by dash_id, display_order;', NULL, '', 19, 0, NULL, NULL, NULL, NULL, 1, '2013-09-11 12:23:17', '2013-09-11 12:23:17');
+
+INSERT INTO `forms` (`id`, `parent_id`, `icon`, `name`, `form_index_num`, `description`, `scope`, `type`, `filter_auto`, `connection`, `default_values_url`, `query`, `target`, `datafile`, `display_order`, `enabled`, `insert_date`, `update_date`) VALUES
+('AdminAddDash', 'AdminDashModule', 'icon-plus', 'Add Dashboard', NULL, 'Enter the dashboard details below to add a new dashboard of results.', 'results', 'form', 0, 'monitralldb', '', 'INSERT INTO dashboards (id, name, description, enabled, display_order, update_date) VALUES (:idIn, :nameIn, :descriptionIn, :enabledIn, :display_orderIn, CURRENT_TIMESTAMP);', '', NULL, 0, 1, '2013-09-13 05:14:32', '2013-09-13 05:14:32'),
+('AdminEditDash', 'AdminDashModule', 'icon-pencil', '', NULL, 'Edit the dashboard details.', 'line', 'form', 0, 'monitralldb', 'api/getResults/AdminDashLine', 'UPDATE dashboards set id=:idIn, name=:nameIn, description=:descriptionIn, display_order= :display_orderIn, enabled=:enabledIn , update_date=CURRENT_TIMESTAMP where id=:lineid;', '', NULL, 1, 1, '2013-09-13 06:12:36', '2013-09-13 06:20:10'),
+('AdminDeleteDash', 'AdminDashModule', 'icon-remove', '', NULL, 'Delete the specific dashboard.', 'line', 'form', 0, 'monitralldb', '', 'delete from dashboards where id = :lineid;', '', NULL, 2, 1, '2013-09-13 06:20:00', '2013-09-13 06:20:00'),
+('AdminAddDashModuleFromDash', 'AdminDashModule', 'icon-plus', '', NULL, 'Add new module to dashboard.', 'line', 'form', 0, 'monitralldb', '', 'INSERT INTO dashresults (dash_id,result_id,update_date, display_order) VALUES (:lineid,:rersultIdIn,CURRENT_TIMESTAMP, :display_orderIn);', '', NULL, 3, 1, '2013-09-13 06:12:36', '2013-09-13 06:20:10'),
+('AdminFilterResultsByDashLine', 'AdminDashModule', 'icon-list', 'Results', NULL, 'Filter Results by Dashboard.', 'line', 'filter', 1, 'monitralldb', '', 'select a.display_order, concat(a.dash_id,\'---->\',a.result_id) lineid from dashresults a where dash_id=:lineid order by a.dash_id, a.display_order;', 'AdminDashResultsModule', '', 4, 1, '2013-09-13 06:34:29', '2013-09-26 06:37:35'),
+('AdminEditDashResult', 'AdminDashResultsModule', 'icon-pencil', '', NULL, 'Edit the dashboard result order.', 'line', 'form', 0, 'monitralldb', '', 'UPDATE dashresults set display_order=:display_orderIn where dash_id = SUBSTRING(:lineid, 1, LOCATE(\'---->\', :lineid) - 1) and result_id=SUBSTRING(:lineid, LOCATE(\'---->\', :lineid) + 5);', '', NULL, 0, 1, '2013-09-13 06:12:36', '2013-09-13 06:20:10'),
+('AdminDeleteDashResult', 'AdminDashResultsModule', 'icon-remove', '', NULL, 'Delete the specific dashboard result.', 'line', 'form', 0, 'monitralldb', '', 'delete from dashresults where dash_id = SUBSTRING(:lineid, 1, LOCATE(\'---->\', :lineid) - 1) and result_id=SUBSTRING(:lineid, LOCATE(\'---->\', :lineid) + 5);', '', NULL, 1, 1, '2013-09-13 06:20:00', '2013-09-13 06:20:00');
+
+INSERT INTO `fields` (`fieldid`, `id`, `form_id`, `title`, `placeholder`, `type`, `default_value`, `option_url`, `required`, `valid_test`, `valid_minlength`, `valid_maxlength`, `display_order`, `enabled`, `insert_date`, `update_date`) VALUES
+(10006, 'idIn', 'AdminAddDash', 'Dashboard Id', 'Enter dashboard id number.', 'text', '', '', 1, 'alphanum', 0, 100, 0, 1, '2013-09-13 05:15:41', '2013-09-13 05:15:41'),
+(10007, 'nameIn', 'AdminAddDash', 'Dashboard Name', 'Enter the dashboard name.', 'text', '', '', 1, '', 0, 255, 1, 1, '2013-09-13 05:16:24', '2013-09-13 05:16:24'),
+(10008, 'descriptionIn', 'AdminAddDash', 'Dashboard Description', 'Enter the dashboard description.', 'textarea', '', '', 0, '', 0, 6000, 2, 1, '2013-09-13 05:17:25', '2013-09-13 05:17:25'),
+(10009, 'display_orderIn', 'AdminAddDash', 'Display order', 'Enter the order of module.', 'text', '0', '', 1, 'digits', 0, 10, 3, 1, '2013-09-13 05:18:22', '2013-09-13 05:20:10'),
+(10010, 'enabledIn', 'AdminAddDash', 'Enabled?', 'Enabled?', 'radio', '0', 'api/config/true_false_bit.json', 1, 'digits', 0, 1, 4, 1, '2013-09-13 05:19:36', '2013-09-13 05:19:36'),
+(10011, 'idIn', 'AdminEditDash', 'Dashboard Id', 'Enter dashboard id number.', 'text', '', '', 1, 'alphanum', 0, 100, 0, 1, '2013-09-13 06:13:29', '2013-09-13 06:13:29'),
+(10012, 'nameIn', 'AdminEditDash', 'Dashboard Name', 'Enter the dashboard name.', 'text', '', '', 1, '', 0, 255, 1, 1, '2013-09-13 06:15:35', '2013-09-13 06:15:35'),
+(10013, 'descriptionIn', 'AdminEditDash', 'Dashboard Description', 'Enter the dashboard description.', 'textarea', '', '', 0, '', 0, 6000, 2, 1, '2013-09-13 06:16:27', '2013-09-13 06:16:27'),
+(10014, 'display_orderIn', 'AdminEditDash', 'Display order', 'Enter the order of module.', 'text', '0', '', 1, 'digits', 0, 10, 3, 1, '2013-09-13 06:17:30', '2013-09-13 06:17:30'),
+(10015, 'enabledIn', 'AdminEditDash', 'Enabled?', 'Enabled?', 'radio', '0', 'api/config/true_false_bit.json', 1, 'digits', 0, 1, 4, 1, '2013-09-13 06:18:18', '2013-09-13 06:18:18'),
+(10017, 'rersultIdIn', 'AdminAddDashModuleFromDash', 'Select Results View Id', 'Select Results View Id.', 'select', '', 'api/getResults/AdminResultsSelectNoEmpty', 1, 'alphanum', 0, 100, 0, 1, '2013-09-13 08:17:08', '2013-09-13 08:17:08'),
+(10016, 'display_orderIn', 'AdminAddDashModuleFromDash', 'Display order', 'Enter the order of module.', 'text', '0', '', 1, 'digits', 0, 10, 1, 1, '2013-09-13 06:17:30', '2013-09-13 06:17:30'),
+(10018, 'display_orderIn', 'AdminEditDashResult', 'Display order', 'Enter the order of module.', 'text', '0', '', 1, 'digits', 0, 10, 0, 1, '2013-09-13 06:17:30', '2013-09-13 06:17:30');
+
+-- demo data for dashboards
+
+INSERT INTO `dashboards` (`id`, `name`, `index_num`, `description`, `display_order`, `enabled`, `insert_date`, `update_date`) VALUES
+('TestDash', 'Test DashBoard 1', NULL, '```Test Dashboard```', 0, 1, '2015-11-12 06:17:13', '2015-11-12 09:49:09'),
+('TestDash2', 'Test Dashboard', NULL, '', 0, 1, '2015-11-12 06:19:06', '2015-11-12 09:49:13');
+
+INSERT INTO `dashresults` (`dash_id`, `result_id`, `update_date`, `display_order`) VALUES
+('TestDash', 'BoxesTest', '2015-11-12 06:18:18', 3),
+('TestDash', 'FillChartTest', '2015-11-12 06:18:04', 0),
+('TestDash', 'TestPercent', '2015-11-12 09:41:41', 6),
+('TestDash', 'TestTODO', '2015-11-12 09:18:14', 5),
+('TestDash2', 'BoxesTest', '2015-11-12 06:19:58', 3),
+('TestDash2', 'PieChartTest', '2015-11-12 06:19:37', 0),
+('TestDash2', 'TestTODO', '2015-11-12 06:19:18', 1);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
