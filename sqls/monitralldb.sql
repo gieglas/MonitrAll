@@ -463,10 +463,8 @@ INSERT INTO `dashresults` (`dash_id`, `result_id`, `update_date`, `display_order
 ('TestDash', 'BoxesTest', '2015-11-12 06:18:18', 3),
 ('TestDash', 'FillChartTest', '2015-11-12 06:18:04', 0),
 ('TestDash', 'TestPercent', '2015-11-12 09:41:41', 6),
-('TestDash', 'TestTODO', '2015-11-12 09:18:14', 5),
 ('TestDash2', 'BoxesTest', '2015-11-12 06:19:58', 3),
-('TestDash2', 'PieChartTest', '2015-11-12 06:19:37', 0),
-('TestDash2', 'TestTODO', '2015-11-12 06:19:18', 1);
+('TestDash2', 'PieChartTest', '2015-11-12 06:19:37', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
