@@ -148,9 +148,24 @@ ORDER BY display_order ASC"
 		"id" => "MonitrallMaxCheckId",		
 		"connection" => "monitralldb",
 		"query" => "SELECT IFNULL(MAX( check_id ) +1,0) as Max_id FROM  checks"
+	),
+	"MonitrallDashboards" => array(
+		"id" => "MonitrallDashboards",		
+		"connection" => "monitralldb",
+		"query" => "SELECT a.id, a.name, a.description, a.display_order FROM dashboards a WHERE a.enabled = 1"
+	),
+	"MonitrallDashResultsByDashId" => array(
+		"id" => "MonitrallDashResultsByDashId",		
+		"connection" => "monitralldb",
+		"query" => "SELECT a.dash_id, a.result_id, a.display_order, b.name FROM dashresults a 
+			INNER JOIN results b ON a.result_id = b.id
+			INNER JOIN dashboards c ON a.dash_id = c.id
+			WHERE a.dash_id=:dash_id 
+			AND b.display = 1
+			AND b.enabled = 1 
+			AND c.enabled = 1
+			ORDER BY a.display_order"
 	)
-	
-
 );
 
 ?>

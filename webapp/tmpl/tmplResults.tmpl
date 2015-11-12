@@ -1,6 +1,16 @@
     <!-- Side bar navigation template -->
     <script id="resultsSideBarTmpl" type="text/template">
-    {{#.}} 
+	<div class="accordion-group">
+      <div class="accordion-heading accordion-heading-dash">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseDashboards">Dashboards</a>
+      </div>
+      <div id="collapseDashboards" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <ul>{{#dashboards}}<li class="view" id="accordionDashboards{{id}}"><a href="#dashboards/{{id}}">{{name}}</a></li>{{/dashboards}}</ul>
+        </div>
+      </div>
+    </div>	
+    {{#groups}} 
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse{{index_num}}">{{name}}</a>
@@ -11,7 +21,7 @@
         </div>
       </div>
     </div>
-    {{/.}}
+    {{/groups}}	
     </script>
     <!-- Breadcrumbs template -->
     <script id="breadcrumbsTmpl" type="text/template">
@@ -49,6 +59,23 @@
       <div id="module-data{{group_index_num}}_{{index_num}}"></div>         
       </div>
       {{/.}}
+      </div>
+    </script>
+	<!-- Module commons dashboard templare -->
+    <script id="moduleDashTmpl" type="text/template">
+      <div class="row-fluid widget-container">
+      <div class="module-description">
+		{{description}}
+      </div>
+	  <div class="clearfix">        
+        <div class="pull-right"><a href="#" data-dash="{{id}}" class="btn refresh-button-dash"><i class="icon-refresh"></i></a></div>
+      </div>
+      {{#items}}
+      <div class="module span4">
+      <a href="#results/{{result_id}}"><h4>{{name}}</h4></a>
+      <div id="module-data{{group_index_num}}_{{index_num}}"></div>         
+      </div>
+      {{/items}}
       </div>
     </script>
     <!-- Module percent templare -->

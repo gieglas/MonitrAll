@@ -95,7 +95,7 @@ function syncServices() {
 		switch ($name) {
 			case 'getResultsGroupList':
 				$groups=array();				
-				$responseStr = $responseStr . ($i==0?'':',') . '{"name":"' . $name . '","data":' . _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms")) . "}";
+				$responseStr = $responseStr . ($i==0?'':',') . '{"name":"' . $name . '","data":' . _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms"),_getMonitrallObjects("Dashboards")) . "}";
 				break;
 			case 'getResults':
 				$resultName = $res->data->name;
@@ -114,7 +114,7 @@ function syncServices() {
 }
 //---------------------------------------------------------------
 function getResultsGroupList() {
-	echo _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms"));	
+	echo _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms"),_getMonitrallObjects("Dashboards"));	
 }
 
 

@@ -53,6 +53,7 @@ var resultsGroupsModel = {
 	groupsData : null,
 	frontPageData: null,
 	tempServiceData: null,
+	dashData:null,
 		
 	//function to return a specific item object using the index
 	getItemByIndex : function(itemIndex){
@@ -112,6 +113,15 @@ var resultsGroupsModel = {
 		}
 		//set frontPageData 
 		this.frontPageData = frontPageArray;
+	},
+	//get the dashboard object in the dashData array
+	getDashById: function(dash_id) {
+		for(var i = 0; i < this.dashData.length; i++){
+			if(this.dashData[i].id == dash_id){
+				var obj = this.dashData[i];
+				return obj;
+			}
+		}
 	}
 
 }
@@ -125,11 +135,16 @@ var appRouter = {
             //home
             this.get('#home', function() {
                 MonitorAllApp.currentParams = [];
-                appRouter.doHome();
+                appRouter.doHome(null);
             });
 			//login
 			this.get('#login', function() {
 				window.location.replace('webapp/login/');
+			});
+			//dashboard
+			this.get('#dashboards/:dashid', function() {
+				MonitorAllApp.currentParams = [];
+                appRouter.doHome(this.params.dashid);				
 			});
 			//results with Name -----------
 			this.get('#results/:iteminid', function() {
@@ -193,24 +208,60 @@ var appRouter = {
         }).run();
 	},
 	//------------------ACTIONS FUNCTIONS-----------------------------
-	doHome: function () {
+	doHome: function (dashId) {
 		//chech if ajax is running
 		if (ajaxRunCount <= 0) {
-			//DEBUG: alert('this is home');
-            //hide any messages from previous actions
-            utils.closeMessage();
-            utils.hideModal();
-            //render the breadcrumb
-			resultsViews.renderBreadcrumbs({"parents":[],"current":"Home"});  
-            //get data with ajax
-            appRouter.getResultsGroupList();
-            //Clear Content
-			$("#modulex").html("");		
-			//render the front commons
-			resultsViews.renderModuleFrontCommon(resultsGroupsModel.frontPageData);
-			//for all front page data
-			for(var i = 0; i < resultsGroupsModel.frontPageData.length; i++){
-				appRouter.getResults(resultsGroupsModel.frontPageData[i].group_index_num,resultsGroupsModel.frontPageData[i].index_num,true,[])
+			//frontpage
+			if (dashId == null){
+				//DEBUG: alert('this is home');
+				//hide any messages from previous actions
+				utils.closeMessage();
+				utils.hideModal();
+				//render the breadcrumb
+				resultsViews.renderBreadcrumbs({"parents":[],"current":"Home"});  
+				//get data with ajax
+				appRouter.getResultsGroupList();
+				//Clear Content
+				$("#modulex").html("");		
+				//render the front commons
+				resultsViews.renderModuleFrontCommon(resultsGroupsModel.frontPageData);
+				//for all front page data
+				for(var i = 0; i < resultsGroupsModel.frontPageData.length; i++){
+					appRouter.getResults(resultsGroupsModel.frontPageData[i].group_index_num,resultsGroupsModel.frontPageData[i].index_num,true,[])
+				}
+			//dashboard
+			} else {				
+				//hide any messages from previous actions
+				utils.closeMessage();
+				utils.hideModal();
+				if (resultsGroupsModel.groupsData == null) {
+					appRouter.getResultsGroupList();
+				}
+				var dashItem=resultsGroupsModel.getDashById(dashId);
+				//hack for index_nums
+				for (var i = 0; i < dashItem.items.length; i++){
+					dashItem.items[i].group_index_num = resultsGroupsModel.getItemById(dashItem.items[i].result_id).group_index_num;
+					dashItem.items[i].index_num = resultsGroupsModel.getItemById(dashItem.items[i].result_id).index_num;
+				}
+				//if the model data re not filled fill them 
+				//render the breadcrumb
+				resultsViews.renderBreadcrumbs({"parents":[{"name":"Home","url":"#"}],"current":dashItem.name});
+				//get data with ajax
+				appRouter.getResultsGroupList();
+				//set activeList on sidebar element
+				$(".activeList").removeClass("activeList");
+				$('#accordionDashboards'+dashId).addClass('activeList');	
+				//accordeon open hack
+				$(".in").removeClass("in");
+				$('#collapseDashboards').addClass('in');	
+				//Clear Content
+				$("#modulex").html("");	
+				//render the front commons
+				resultsViews.renderModuleDashCommon(dashItem);
+				//for all front page data
+				for(var i = 0; i < dashItem.items.length; i++){
+					appRouter.getResults(dashItem.items[i].group_index_num,dashItem.items[i].index_num,true,[])
+				}
 			}
 		}else {
             utils.showMessage('Info', 'System is still processing previous request', 'alert-info');
@@ -454,10 +505,11 @@ var appRouter = {
         switch (name) {
             case 'getResultsGroupList':
                 //update the model
-				resultsGroupsModel.groupsData = data;
+				resultsGroupsModel.groupsData = data.groups;
+				resultsGroupsModel.dashData = data.dashboards;
 				resultsGroupsModel.getFrontPageItems();
 				//render the view
-				resultsViews.renderResultsSideBar(resultsGroupsModel.groupsData);
+				resultsViews.renderResultsSideBar(data);
             break;
             case 'getResults':
                 //render the view
@@ -536,6 +588,8 @@ var resultsViews = {
 		$('#content').on('click','.json-button',this.jsonDownloadClick);		
 		//click on refresh front
 		$('#content').on('click','.refresh-button-front',this.refreshFrontModuleClick);	
+		//click on refresh dash
+		$('#content').on('click','.refresh-button-dash',this.refreshDashModuleClick);	
 		//click on show menu
 		$('#content').on('click','#showmenu',this.showMenu);
 		//load results form
@@ -565,7 +619,13 @@ var resultsViews = {
 		utils.downloadJSON.apply(this,[currentResultData, 'export.txt']);		
 	},
 	refreshFrontModuleClick: function() {		
-		appRouter.doHome();
+		appRouter.doHome(null);
+		return false;
+	},
+	refreshDashModuleClick: function() {
+		// get dashId
+		var dashId = $(this).data('dash');
+		appRouter.doHome(dashId);
 		return false;
 	},
 	loadForm: function (){
@@ -795,6 +855,22 @@ var resultsViews = {
 		$("#modulex").html(html);
 		//DEBUG:  alert(html);
 	},
+	renderModuleDashCommon:function(data){
+		//get template from html
+		var template =$('#moduleDashTmpl').html();
+		//render html using template and data
+		var html = Mustache.render(template, data);
+		//set the html on the page
+		$("#modulex").html(html);
+		//Markdown with Pagedown		
+		// create a pagedown converter - regular and sanitized versions are both supported
+		var converter = new Markdown.getSanitizingConverter();
+		// tell the converter to use Markdown Extra
+		Markdown.Extra.init(converter, {highlighter: "highlight"});
+		$(".module-description").html(converter.makeHtml(data.description));
+		utils.highlightCode();
+		//DEBUG:  alert(html);
+	},	
 	renderModuleDataTable: function(data,groupIndexId,itemIndexId,isFront){
 		/*get module id depending if is in front page*/
 		var moduleId = '#module-data' + (isFront?groupIndexId+'_'+itemIndexId:'');

@@ -241,6 +241,15 @@ a.line-button:hover {
 	background-repeat: no-repeat;*/
 }
 
+#sidebar .accordion-heading-dash a{
+	text-decoration: none;
+    display: block;
+}
+
+.accordion-heading-dash a, .accordion-heading-dash a:hover{
+	background-color: #1b1b1b;	
+}
+
 	.row-fluid [class*="span"]  {margin-left: 0;}
 
 /*parley*/

@@ -369,8 +369,11 @@ function _getOpenPDOConnection($connection) {
 }
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getGroupData($groupData,$itemsData,$formsData) {
+function _getGroupData($groupData,$itemsData,$formsData,$dashBoards) {
+	//use global $results_config
+	global $monitrall_results_config;
 	$arrColumns = array(); 
+	$arrDash = array(); 
 	$i = 0;
 	foreach($groupData as $res) {
 		//set the array index num
@@ -380,7 +383,27 @@ function _getGroupData($groupData,$itemsData,$formsData) {
 		$arrColumns[$i]["items"] = _getGroupItemsArray($itemsData,$formsData,$res["id"],$i);
 		$i++;
 	}
-	return json_encode($arrColumns);	
+	$i = 0;
+	//dashboards
+	foreach($dashBoards as $res) {
+		$arrDash[$i]=$res;
+		//add items in the Group from groupData
+		$parameterObj=new stdClass();
+		$parameterObj->name="dash_id";
+		$parameterObj->value=$res["id"];
+		$dbObject = _getData("MonitrallDashResultsByDashId",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+		
+		$returnObject = array();
+		foreach($dbObject as $res) {
+			array_push($returnObject,$res);			
+		}
+		$arrDash[$i]["items"] = $returnObject;
+		$i++;
+	}
+	$parameterObj=new stdClass();	
+	$parameterObj->groups=$arrColumns;
+	$parameterObj->dashboards=$arrDash;
+	return json_encode($parameterObj);
 }
 
 //--------------------------------------------------------------
@@ -560,6 +583,22 @@ function _getMonitrallFormsFromDB($name = null,$by = "id") {
 	
 	return $returnObject;
 }
+//--------------------------------------------------------------
+//-------PRIVATE
+function _getMonitrallDashboardsFromDB() {
+	//use global $results_config
+	global $monitrall_results_config;		
+	$returnObject = array();
+	$i = 0;
+	//return the results array
+	$dbObject = _getData("MonitrallDashboards",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		
+	foreach($dbObject as $res) {
+		$returnObject[$res["id"]] = $res;
+	}
+	
+	return $returnObject;
+}
 //-------------------------------------------------------------
 //-------PRIVATE
 function _getMonitrallObjects($objectType,$name = null){
@@ -588,6 +627,9 @@ function _getMonitrallObjects($objectType,$name = null){
 				//use global $db_connections
 				global $db_connections;
 				$returnObject = $db_connections;	
+			break;
+			case "Dashboards":
+				$returnObject=_getMonitrallDashboardsFromDB();
 			break;
 		}			
 	return $returnObject;
