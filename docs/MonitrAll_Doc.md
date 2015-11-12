@@ -10,6 +10,7 @@ Object Literal. The model of data. Main data are contained in the groupsData pro
 - *groupsData*
 - *frontPageData*
 - *tempServiceData*
+- *dashData*
     
 **Methods**
 
@@ -25,11 +26,13 @@ Object Literal. The model of data. Main data are contained in the groupsData pro
   get the group object in the groupsData array
 - *getFrontPageItems*
   get the front page items
-
+- *getDashById*
+  get the dashboard object in the dashData array
+  
 **groupsData sample**
 
 ```json
-
+{groups:
 [   {
         "id": "groupId",
         "name": "Group Name",
@@ -95,8 +98,25 @@ Object Literal. The model of data. Main data are contained in the groupsData pro
             }
 		]
 	}
-]
-
+],
+"dashboards":
+[	{	
+		"id" : "TestDash",
+		"name" : "Test DashBoard 1",
+		"description" : "```Test Dashboard```",
+		"display_order" : "0",
+		"items" : 
+			[
+				{
+					"dash_id" : "TestDash",
+					"result_id" : "FillChartTest",
+					"display_order" : "0",
+					"name" : "Test Fill Chart"
+				}			
+			]
+	}
+] 
+}
 ```
 
 appRouter
@@ -115,6 +135,8 @@ The `responseResponse` method handles all the **AJAX responses** from the server
     Home page
   - *#login*
     For login
+  - *#dashboards/:dashid*
+    Dashboard by id	
   - *#results/:iteminid*
     Results by id
   - *#results/:groupIndexId/:itemIndexId*
@@ -129,7 +151,7 @@ The `responseResponse` method handles all the **AJAX responses** from the server
 **Action Methods**
 
 - *doHome* 
-  Handles the `#home` url requests
+  Handles the `#home` and `#dashboards` url requests
   Also called from `resultsView.refreshFrontModuleClick`
 - *doResults*
   Handles the `#results` url requests
@@ -193,6 +215,8 @@ With the `render` methods it handles rendering to the page with `mustache.js` te
   Download JSON. This method is binded in `bindEvents` method.
 - *refreshFrontModuleClick*
   Refreshes the from page. This method is binded in `bindEvents` method.
+- *refreshDashModuleClick*
+  Refreshes the from dashboards. This method is binded in `bindEvents` method.
 - *loadForm*
   Loads the page scope forms.  This method is binded in `bindEvents` method.
 - *loadLineForm*
@@ -216,6 +240,8 @@ With the `render` methods it handles rendering to the page with `mustache.js` te
   Renders the commons (top part) of the results view, when a result is viewed in detail. 
 - *renderModuleFrontCommon*
   Renders the commons (top part) of the results view, when a result is viewed in the front page. 
+- *renderModuleDashCommon*
+  Renders the commons (top part) of the results view, when a result is viewed in the Dashboard page. 
 - *renderModuleDataTable*
   Renders the data part (bottom part) of the results view, for the table type views. 
 - *renderModuleDataDetails*
@@ -400,11 +426,11 @@ $conn = new PDO($connStr,$myUser,$myPass);
 Returns an array of Group Objects (with the repsected Result objects for each group). It uses `_getGroupItemsArray` to complete the results objects. 
 
 ```php
-_getGroupData($groupData,$itemsData,$formsData)
+_getGroupData($groupData,$itemsData,$formsData,$dashBoards)
 ```
 
 *NOTE*
-The `$groupData`,`$itemsData`,`$formsData` must already be retreived from the DB
+The `$groupData`,`$itemsData`,`$formsData`,`$dashBoards` must already be retreived from the DB
 
 ###_getGroupItemsArray###
 
@@ -483,6 +509,14 @@ Returns an array of Forms from the DB. Uses the `_getData` method with the  `Mon
 _getMonitrallFormsFromDB($name = null,$by = "id")
 ```
 
+###_getMonitrallDashboardsFromDB###
+
+Returns an array of Dashboards from the DB. Uses the `_getData` method with the  `MonitrallDashboards` query which can be found at `api/config/monitrallQueries.php` 
+
+```php
+_getMonitrallDashboardsFromDB($name = null,$by = "id")
+```
+
 ###_getMonitrallObjects###
 
 Uses the getMonitrall____db methods (see above) to return Monitrall objects (Arrays) from the database. It can return one of the following:
@@ -493,6 +527,7 @@ Uses the getMonitrall____db methods (see above) to return Monitrall objects (Arr
 - *FormsByResultId*
 - *NotificationResults*
 - *Connections*
+- *Dashboards*
 
 ```php
 _getMonitrallObjects($objectType,$name = null)
@@ -752,6 +787,30 @@ array (
 	)
 )
 ```
+
+###$dashBoards###
+
+the array of objects that represent the dashboards. i.e.
+
+```php
+array (
+	"TestDash" => array (
+		"id" => "TestDash",
+		"name" => "Test DashBoard 1",		
+		"description" => "```Test Dashboard```",
+		"display_order" => "0",
+		"items" => "*********",
+		"name" => array (
+			"0" => array (
+				"dash_id" => "TestDash",
+				"result_id" => "FillChartTest",
+				"display_order" => "0",
+				"name" => "Test Fill Chart"
+			)
+		)
+	)
+)
+```
   
 ###$parameters###
 
@@ -908,3 +967,5 @@ Defines all the queries used by the MonitrAll system.
 - *MonitrallMaxStatId* Gets the maximum statistic Id
 - *MonitrallInsertChecks* Inserts a checks record
 - *MonitrallMaxCheckId* Gets the maximum check Id
+- *MonitrallDashboards* Gets the dashboards
+- *MonitrallDashResultsByDashId* Gets the results for a dashboard by dashboard id

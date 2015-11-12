@@ -189,6 +189,10 @@ See the `Command Line Tools` for more information on how to implement this.
 - `Start Notification Date Time`: When to start the Notifications
 - `Next Notification Date Time`: When the next notification will take place (Autogenetated)
 
+### 2.6 Dashboards ###
+For making dashboards out of Results. Similar functionality to the Front Page. 
+Create Dashboards and add result items to them. The dashboard links will appear on the left sidebar under `Dashboards`.
+
 3. Command line Tools 
 ------------------
 A series of command line php tools that enhance the functionality of MonitrAll.
