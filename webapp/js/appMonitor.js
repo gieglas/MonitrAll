@@ -888,26 +888,62 @@ var resultsViews = {
 		if (!isFront) {
 			template = template + '{{#hasForms}}<th></th>{{/hasForms}}';
 		}		
-		template = template + '</tr></thead><tbody>{{#.}}<tr>';
+		template = template + '</tr></thead><tbody>{{#data}}<tr>';
 		//fill in template the data
         for(var i = 0; i < headersLength; i++){
-			template = template +'<td>{{' + headers[i] + '}}</td>';
+            var classStr = "";
+            // if column is value then change class depending to green red orange
+            if (headers[i].toLowerCase() == 'value') {
+                var classStr = 'class="{{#green}}box-success-clrs{{/green}} {{#red}}box-error-clrs{{/red}} {{#orange}}box-alert-clrs{{/orange}}"';
+            }
+			template = template +'<td '+classStr+'>{{' + headers[i] + '}}</td>';
 		}
 		//for forms and not front
 		if (!isFront) {
 			template = template + '{{#hasForms}}<td> {{#lineForms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" data-lineid="{{lineid}}" class="line-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/lineForms}}</td>{{/hasForms}}';
 		}
-		template = template + '</tr>{{/.}}</tbody></table>';
+		template = template + '</tr>{{/data}}</tbody></table>';
 		//----------------------------------------------------
+		
+		
+		
+		//add conditions to data
+		//Extend the object with functions to decide if green, red or orange
+		//default is false in case there is nothing in the config
+		var newData = {data: [], 
+					   lineForms: [],
+					//extend groupnum and indexnum to be used in forms
+					group_index_num:function () {return groupIndexId},
+					index_num: function () {return itemIndexId},
+					//extent functions
+					green: function () {return false;},
+					red: function () {return false;},
+					orange: function () {return false;},
+					front: function () {return isFront},
+					notFront: function () {return !isFront},
+					hasForms: function () {if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms.length > 0) return true;
+						else return false;},
+					hasIcon: function () {if (this.icon) return true;
+						else return false;}};
+		newData.data = data; 	
 		//add line forms
-		data.lineForms = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms;		
-		//add form functions 
-		data.hasForms = function () {if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms.length > 0) return true;
-						else return false;};
-		data.hasIcon = function () {if (this.icon) return true;
-						else return false;};
-		data.group_index_num = function () {return groupIndexId};
-		data.index_num = function () {return itemIndexId};
+		newData.lineForms = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms;		
+		//conditions
+		//if green condition exist ... red orange respectevily
+			if ((resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_operator) && (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_value)) {
+				//change the function to represent the condition 
+				newData.green=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_value)) return true};
+			} 
+			if ((resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_orange_operator) && (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_orange_value)) {
+				newData.orange=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_orange_operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_orange_value)) return true};
+			}
+			if ((resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_red_operator) && (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_red_value)) {
+				newData.red=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_red_operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_red_value)) return true};
+			}
+		data = newData;
+		
+		
+		
 		//DEBUG: alert (template);
 		//render html using template and data
 		var html = Mustache.render(template, data);
@@ -1032,20 +1068,6 @@ var resultsViews = {
 		newData.data = data; 	
 		//add line forms
 		newData.lineForms = resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].lineForms;		
-		/*//check if conditions exist
-		if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition) {
-			//if green condition exist ... red orange respectevily
-			if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.green) {
-				//change the function to represent the condition 
-				newData.green=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.green.operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.green.value)) return true};
-			} 
-			if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.orange) {
-				newData.orange=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.orange.operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.orange.value)) return true};
-			}
-			if (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.red) {
-				newData.red=function(){if (utils.compare(this.value,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.red.operator,resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition.red.value)) return true};
-			} 							 
-		}		*/
 		//conditions
 		//if green condition exist ... red orange respectevily
 			if ((resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_operator) && (resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].condition_green_value)) {
