@@ -894,9 +894,9 @@ var resultsViews = {
             var classStr = "";
             // if column is value then change class depending to green red orange
             if (headers[i].toLowerCase() == 'value') {
-                var classStr = 'class="{{#green}}box-success-clrs{{/green}} {{#red}}box-error-clrs{{/red}} {{#orange}}box-alert-clrs{{/orange}}"';
+                var classStr = ' class="{{#green}}box-success-clrs{{/green}} {{#red}}box-error-clrs{{/red}} {{#orange}}box-alert-clrs{{/orange}}"';
             }
-			template = template +'<td '+classStr+'>{{' + headers[i] + '}}</td>';
+			template = template +'<td'+classStr+'>{{' + headers[i] + '}}</td>';
 		}
 		//for forms and not front
 		if (!isFront) {
@@ -951,7 +951,7 @@ var resultsViews = {
 		$(moduleId).html(html);
 		//DEBUG:  alert(html);
 		//datatable
-		if ((data.length > 0) && (!isFront)){
+		if ((data.data.length > 0) && (!isFront)){
 			$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25});
 		}		
 	},
