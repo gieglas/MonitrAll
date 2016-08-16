@@ -1,0 +1,7 @@
+{
+    "require": {
+        "monolog/monolog": "^1.18",
+        "lcobucci/jwt": "^3.1",
+        "swiftmailer/swiftmailer": "@stable"
+    }
+}

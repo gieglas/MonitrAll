@@ -1,0 +1,145 @@
+<script id="logintmpl" type="text/template">
+    <div class="form-signin" id="form-signin">
+        <form id="signIn_frm" class="noEnterSubmit"><h2>Login</h2>
+            
+            <label for="login_input_username">Username</label><input id="login_input_username" autofocus data-trigger="change" data-required="true" type="text" name="user_name" required />
+            <label for="login_input_password">Password</label><input id="login_input_password" data-trigger="change" data-required="true" type="password" name="user_password" required />
+            <input id="login_input_redirect" type="hidden" name="redirect" value="" />
+            <input type="button" id="loginBtn" name="login" value="Log in" />
+        </form>
+    </div>
+</script>
+<script id="loggedintmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><div id="change_details_frm"><h2>Security Module</h2>
+    <p id="feedback">Hello {{name}} you are logged in. {{#isAdmin}}Admin{{/isAdmin}}</p>
+        <br><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a>
+        <br><a href="#" class="clickAction" id="changepass"><i class="icon-star-empty"></i> Change Password</a>
+        <br><a href="#" class="clickAction" id="changedetails"><i class="icon-pencil"></i> Change Details</a>
+        <br>{{#isAdmin}}<br><a href="#" class="clickAction" id="grouplist"><i class="icon-list"></i> Groups</a>
+        <br><a href="#" class="clickAction" id="userlist"><i class="icon-user"></i> Users</a>
+        <br><br>{{/isAdmin}}<a href="../">Back to Application</a></div></div>
+</script>
+<script id="changepasstmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Change Password</h2>
+    <p>NOTE: If you are an ldap user then the change will have no effect. </p>
+    <form id="changepassform"class="noEnterSubmit">
+    <label for="input_password_old">Old Password (min. 6 characters)</label><input id="input_password_old" data-clickaction="dochangepass" class="login_input" type="password" name="user_password_old" data-trigger="change" data-required="true" data-minlength=6 data-maxlength=255 autocomplete="off" />
+    <label for="input_password_new">New Password (min. 6 characters)</label><input id="input_password_new" data-clickaction="dochangepass" class="login_input" type="password" name="user_password_new" data-trigger="change" data-required="true" data-minlength=6 data-maxlength=255 autocomplete="off" />
+    <label for="input_password_repeat">Repeat New password</label><input id="input_password_repeat" data-clickaction="dochangepass" class="login_input" type="password" name="user_password_repeat" data-trigger="change" data-required="true" data-minlength=6 data-maxlength=255 autocomplete="off" />
+    <br><input type="button" class="clickAction" id="dochangepass" name="dochangepass" value="Change Password" />
+    </form><div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div></div>
+</script>
+<script id="changedetailstmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Change Details</h2>
+    <form id="changedetailsform"class="noEnterSubmit">{{#data}}
+    <label for="name">Name</label><input id="name" data-clickaction="dochangedetails" value="{{name}}" class="login_input" type="text" name="name" data-trigger="change" data-required="true" data-minlength=1 data-maxlength=255 />
+    <label for="user_email">Email</label><input id="user_email" data-clickaction="dochangedetails" value="{{user_email}}" class="login_input" type="text" name="user_email" data-type="email" data-trigger="change" data-required="true" data-minlength=1 data-maxlength=255 />
+    <label for="user_phone">Phone</label><input id="user_phone" data-clickaction="dochangedetails" value="{{user_phone}}" class="login_input" type="text" name="user_phone" data-type="alphanum" data-trigger="change" data-minlength=0 data-maxlength=255 />
+    <br><input type="button" class="clickAction" id="dochangedetails" name="dochangedetails" value="Change" /></form>
+    {{/data}}</form><div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div></div>
+</script>
+<script id="newusertmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>User Details</h2>
+    <form id="newuserform" class="noEnterSubmit">
+    <label for="user_name">User Name</label><input placeholder="username" data-clickaction="donewuser" id="user_name" class="login_input" type="text" name="user_name" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="is_ldap">Is Ldap?</label><select data-required="true" data-trigger="change" name="is_ldap" id="is_ldap"><option value="1">True</option><option value="0">False</option></select>
+    <label for="ldap_server">Ldap Server</label><input placeholder="ldap://10.10.10.10" data-clickaction="donewuser" id="ldap_server" class="login_input" type="text" name="ldap_server" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
+    <label for="group_id">Group Id</label><select data-required="true" data-trigger="change" name="group_id" id="group_id">{{#data}}<option value="{{group_id}}">{{name}}</option>{{/data}}</select>
+    <label for="name">Name</label><input id="name" data-clickaction="donewuser" class="login_input" type="text" name="name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_email">Email</label><input id="user_email" data-clickaction="donewuser" class="login_input" type="text" name="user_email" data-type="email" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_phone">Phone</label><input id="user_phone" data-clickaction="donewuser" class="login_input" type="text" name="user_phone" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
+    <label for="is_admin">Is Admin?</label><select data-required="true" data-trigger="change" name="is_admin" id="is_admin"><option value="1">True</option><option selected value="0">False</option></select>
+    <label for="comments">Comments</label><textarea rows="5" class="formInput" data-minlength=0 data-maxlength=6000 data-trigger="change" name="comments" id="comments"></textarea>
+    <label for="enabled">Enabled</label><select data-required="true" data-trigger="change" name="enabled" id="enabled"><option value="1">True</option><option value="0">False</option></select>
+    <br><input type="button" class="clickAction" id="donewuser" name="donewuser" value="Add" /></form>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="useredittmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>User Details</h2>
+    <form id="edituserform" class="noEnterSubmit">
+    {{#data}}
+    <label for="user_name">User Name</label><input value="{{data.user.user_name}}" readonly placeholder="username" data-clickaction="doedituser" id="user_name" class="login_input" type="text" name="user_name" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="is_ldap">Is Ldap?</label><select data-required="true" data-trigger="change" name="is_ldap" id="is_ldap"><option value="1">True</option><option value="0">False</option></select>
+    <label for="ldap_server">Ldap Server</label><input value="{{data.user.ldap_server}}" placeholder="ldap://10.10.10.10" data-clickaction="doedituser" id="ldap_server" class="login_input" type="text" name="ldap_server" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
+    <label for="group_id">Group Id</label><select data-required="true" data-trigger="change" name="group_id" id="group_id">{{#groups}}<option value="{{group_id}}">{{name}}</option>{{/groups}}</select>
+    <label for="name">Name</label><input value="{{data.user.name}}" id="name" data-clickaction="doedituser" class="login_input" type="text" name="name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_email">Email</label><input value="{{data.user.user_email}}" id="user_email" data-clickaction="doedituser" class="login_input" type="text" name="user_email" data-type="email" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_phone">Phone</label><input value="{{data.user.user_phone}}" id="user_phone" data-clickaction="doedituser" class="login_input" type="text" name="user_phone" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
+    <label for="is_admin">Is Admin?</label><select data-required="true" data-trigger="change" name="is_admin" id="is_admin"><option value="1">True</option><option selected value="0">False</option></select>
+    <label for="comments">Comments</label><textarea rows="5" class="formInput" data-minlength=0 data-maxlength=6000 data-trigger="change" name="comments" id="comments">{{data.user.comments}}</textarea>
+    <label for="enabled">Enabled</label><select data-required="true" data-trigger="change" name="enabled" id="enabled"><option value="1">True</option><option value="0">False</option></select>
+    {{/data}}
+    <br><input type="button" class="clickAction" id="doedituser" name="doedituser" value="Save" /></form>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="newgrouptmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Group Details</h2>
+    <form id="newgroupadminform" class="noEnterSubmit">
+    {{#data}}
+    <label for="group_id">Group Id</label><input placeholder="Group Id" data-clickaction="donewgroup" id="group_id" class="login_input" type="text" name="group_id" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="name">Name</label><input placeholder="Name" data-clickaction="donewgroup" id="name" class="login_input" type="text" name="name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="description">description</label><textarea rows="5" class="formInput" data-minlength=0 data-maxlength=6000 data-trigger="change" name="description" id="description"></textarea>
+    <label for="enabled">Enabled</label><select data-required="true" data-trigger="change" name="enabled" id="enabled"><option value="1">True</option><option value="0">False</option></select>
+    {{/data}}
+    <br><input type="button" class="clickAction" id="donewgroup" name="donewgroup" value="Add" /></form>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="groupedittmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Group Details</h2>
+    <form id="editgroupadminform" class="noEnterSubmit">
+    {{#data}}
+    <label for="group_id">Group Id</label><input value="{{group_id}}" readonly placeholder="Group Id" data-clickaction="doeditgroup" id="group_id" class="login_input" type="text" name="group_id" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="name">Name</label><input value="{{name}}" placeholder="Name" data-clickaction="doeditgroup" id="name" class="login_input" type="text" name="name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="description">description</label><textarea rows="5" class="formInput" data-minlength=0 data-maxlength=6000 data-trigger="change" name="description" id="description">{{description}}</textarea>
+    <label for="enabled">Enabled</label><select data-required="true" data-trigger="change" name="enabled" id="enabled"><option value="1">True</option><option value="0">False</option></select>
+    {{/data}}
+    <br><input type="button" class="clickAction" id="doeditgroup" name="doeditgroup" value="Save" /></form>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="userlisttmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Users</h2>
+    <div class="clearfix"><a href="#" class="clickAction" class="clickAction" id="newuser"><span class="label label-info">New</span></a></div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table"><thead><tr>
+    <th>User Name</th><th>ldap</th><th>name</th><th>Admin</th><th>Group</th><th>Created</th><th>Register token</th><th>Enabled</th><th>Actions</th>
+    </tr></thead><tbody>{{#data}}<tr>
+    <td>{{user_name}}</td><td>{{is_ldap}}</td><td>{{name}}</td><td>{{is_admin}}</td><td>{{group_id}}</td><td>{{insert_date}}</td><td>{{registered}}</td><td>{{enabled}}</td><td>
+         <a href="#" class="clickAction" data-uid="{{user_name}}" title="Edit" id="useredit"><span class="label label-info"><i class="icon-edit icon-white"></i></span></a>
+         <a href="#" class="clickAction" data-uid="{{user_name}}" title="Delete" id="userdelete"><span class="label label-info"><i class="icon-trash icon-white"></i></span></a>
+		 <a href="#" class="clickAction" data-uid="{{user_name}}" title="Reset Passord" id="userresertpass"><span class="label label-info"><i class="icon-envelope icon-white"></i></span></a>
+    </td></tr>{{/data}}</tbody></table>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="grouplisttmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Groups</h2>
+    <div class="clearfix"><a href="#" class="clickAction" id="newgroup"><span class="label label-info">New</span></a></div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table"><thead><tr>
+    <th>Group Id</th><th>Name</th><th>Enabled</th><th>Actions</th>
+    </tr></thead><tbody>{{#data}}<tr>
+    <td>{{group_id}}</td><td>{{name}}</td><td>{{enabled}}</td><td>
+         <a href="#" class="clickAction" data-uid="{{group_id}}" title="Edit" id="groupedit"><span class="label label-info"><i class="icon-edit icon-white"></i></span></a>
+         <a href="#" class="clickAction" data-uid="{{group_id}}" title="Delete" id="groupdelete"><span class="label label-info"><i class="icon-trash icon-white"></i></span></a>
+         <a href="#" class="clickAction" data-uid="{{group_id}}" title="Rights" id="grouprights"><span class="label label-info"><i class="icon-eye-open icon-white"></i></span></a>
+    </td></tr>{{/data}}</tbody></table>
+    <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="grouprightstmpl" type="text/template">
+    <div class="form-signed" id="form-signed"><h2>Group Rights</h2>
+        <form id="editgrouprightsform" class="noEnterSubmit">
+            <div class="row-fluid">
+                {{#data}}<div class="span6">
+                    <label for="{{id}}"><input type="checkbox" name="result_id" id="{{id}}" value="{{id}}" {{#isRights}} checked="checked"{{/isRights}} > {{name}}</label>
+                </div>{{/data}}
+            </div>
+            <div><input type="button" class="clickAction" data-uid="{{uid}}" id="doeditgrouprights" name="doeditgrouprights" value="Save"></div>
+        </form>
+        <div id="change_details_frm"><a href="#" class="clickAction" id="logoutBtn"><i class="icon-lock"></i> Log out</a><br/><a href="#" class="clickAction" id="userhomeBtn"><i class="icon-home"></i> Homepage</a><br/><a href="../">Back to Application</a></div>
+    </div>
+</script>
+<script id="resetpasswordtmpl" type="text/template">
+</script>
