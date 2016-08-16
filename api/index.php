@@ -72,7 +72,7 @@ function getConnectionsList() {
 		array_push($arrColumns,array("name"=>$res["id"], "value"=>$res["id"]));				
 	}
 
-	echo json_encode($arrColumns);
+	echo json_encode($arrColumns). '  ';
 }
 
 //---------------------------------------------------------------
@@ -129,7 +129,7 @@ function syncServices($name) {
 		$i++;
 	}
 	$responseStr = $responseStr . ']';
-	echo $responseStr;
+	echo $responseStr . '  ';
 }
 //---------------------------------------------------------------
 function getResultsGroupList() {
@@ -153,7 +153,7 @@ function getResultsGroupList() {
         return false;
     }
     //TODO: HERE: isLoggedIn OR isAuthorized
-	echo _getGroupData(_getMonitrallObjects("Groups",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Results",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Forms", null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Dashboards", null, $authmonLogin->id, $authmonLogin->isAdmin),$authmonLogin->id, $authmonLogin->isAdmin);
+	echo _getGroupData(_getMonitrallObjects("Groups",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Results",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Forms", null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Dashboards", null, $authmonLogin->id, $authmonLogin->isAdmin),$authmonLogin->id, $authmonLogin->isAdmin). '  ';
 }
 
 
@@ -182,7 +182,7 @@ function getResults($name) {
 	//get the response data
 	$parameters = $requestData;
 
-	echo _getData($name,_getMonitrallObjects("Results",$name),_getMonitrallObjects("FormsByResultId",$name),_getMonitrallObjects("Connections"),$parameters);
+	echo _getData($name,_getMonitrallObjects("Results",$name),_getMonitrallObjects("FormsByResultId",$name),_getMonitrallObjects("Connections"),$parameters). '  ';
 }
 
 //---------------------------------------------------------------

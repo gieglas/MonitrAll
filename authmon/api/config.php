@@ -46,7 +46,7 @@ $JWTQueries = array(
 	"checkUser" => array(
 		"id" => "checkUser",		
 		"connection" => "monitralldb",
-		"query" => "SELECT a.user_name, a.user_password_hash, a.is_ldap, a.name, a.is_admin, a.lock_tries, a.lock_date, 
+		"query" => "SELECT a.ldap_server, a.user_name, a.user_password_hash, a.is_ldap, a.name, a.is_admin, a.lock_tries, a.lock_date, 
 		    IFNULL(TIME_TO_SEC(TIMEDIFF(now(),a.lock_date)) /60,1000) as lock_diff
                 FROM sec_users a, sec_groups b
                 WHERE a.group_id = b.group_id

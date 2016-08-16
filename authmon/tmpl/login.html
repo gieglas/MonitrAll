@@ -41,7 +41,7 @@
 <script id="newusertmpl" type="text/template">
     <div class="form-signed" id="form-signed"><h2>User Details</h2>
     <form id="newuserform" class="noEnterSubmit">
-    <label for="user_name">User Name</label><input placeholder="username" data-clickaction="donewuser" id="user_name" class="login_input" type="text" name="user_name" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_name">User Name</label><input placeholder="username" data-clickaction="donewuser" id="user_name" class="login_input" type="text" name="user_name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
     <label for="is_ldap">Is Ldap?</label><select data-required="true" data-trigger="change" name="is_ldap" id="is_ldap"><option value="1">True</option><option value="0">False</option></select>
     <label for="ldap_server">Ldap Server</label><input placeholder="ldap://10.10.10.10" data-clickaction="donewuser" id="ldap_server" class="login_input" type="text" name="ldap_server" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
     <label for="group_id">Group Id</label><select data-required="true" data-trigger="change" name="group_id" id="group_id">{{#data}}<option value="{{group_id}}">{{name}}</option>{{/data}}</select>
@@ -59,7 +59,7 @@
     <div class="form-signed" id="form-signed"><h2>User Details</h2>
     <form id="edituserform" class="noEnterSubmit">
     {{#data}}
-    <label for="user_name">User Name</label><input value="{{data.user.user_name}}" readonly placeholder="username" data-clickaction="doedituser" id="user_name" class="login_input" type="text" name="user_name" data-type="alphanum" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
+    <label for="user_name">User Name</label><input value="{{data.user.user_name}}" readonly placeholder="username" data-clickaction="doedituser" id="user_name" class="login_input" type="text" name="user_name" data-trigger="change" data-required="true" data-minlength="1" data-maxlength="255" autocomplete="off">
     <label for="is_ldap">Is Ldap?</label><select data-required="true" data-trigger="change" name="is_ldap" id="is_ldap"><option value="1">True</option><option value="0">False</option></select>
     <label for="ldap_server">Ldap Server</label><input value="{{data.user.ldap_server}}" placeholder="ldap://10.10.10.10" data-clickaction="doedituser" id="ldap_server" class="login_input" type="text" name="ldap_server" data-trigger="change" data-minlength="0" data-maxlength="255" autocomplete="off">
     <label for="group_id">Group Id</label><select data-required="true" data-trigger="change" name="group_id" id="group_id">{{#groups}}<option value="{{group_id}}">{{name}}</option>{{/groups}}</select>
