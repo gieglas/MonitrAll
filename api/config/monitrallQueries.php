@@ -51,6 +51,18 @@ $monitrall_results_config = array(
 			where enabled = 1
 			order by display_order asc"
 	),
+	"MonitrallGroupsUser" => array(
+		"id" => "MonitrallGroupsUser",		
+		"connection" => "monitralldb",
+		"query" => "SELECT distinct a.id, a.name, a.index_num, a.description 
+			from groups a
+			inner join results b on b.group_id =a.id 
+			inner join sec_groupsresults c on b.id =c.result_id
+			inner join sec_users d on d.group_id=c.group_id
+			where a.enabled = 1 
+			and LOWER(d.user_name) = LOWER(:user_name)
+			order by a.display_order asc"
+	),
 	"MonitrallResults" => array(
 		"id" => "MonitrallResults",		
 		"connection" => "monitralldb",
@@ -59,6 +71,17 @@ $monitrall_results_config = array(
 		where enabled = 1
 			order by display_order asc"
 	),
+	"MonitrallResultsUser" => array(
+		"id" => "MonitrallResultsUser",		
+		"connection" => "monitralldb",
+		"query" => "SELECT  a.id ,  a.name ,  a.index_num ,  a.group_index_num ,  a.description ,  a.group_id ,  a.ui_type ,  a.frontpage ,  a.display ,  a.connection ,  a.condition_green_operator ,  a.condition_green_value , a.condition_orange_operator ,  a.condition_orange_value ,  a.condition_red_operator ,  a.condition_red_value ,  a.query ,  a.datafile ,  a.display_order 
+		FROM  results a
+		inner join sec_groupsresults b on a.id =b.result_id
+		inner join sec_users c on c.group_id=b.group_id
+		where a.enabled = 1
+			and LOWER(c.user_name) = LOWER(:user_name)
+			order by a.display_order asc"
+	),
 	"MonitrallForms" => array(
 		"id" => "MonitrallForms",		
 		"connection" => "monitralldb",
@@ -66,6 +89,17 @@ $monitrall_results_config = array(
 		FROM forms 
 		WHERE enabled = 1
 		order by display_order asc"		
+	),
+	"MonitrallFormsUser" => array(
+		"id" => "MonitrallFormsUser",		
+		"connection" => "monitralldb",
+		"query" => "SELECT a.id, a.parent_id, a.icon, a.name,a.form_index_num, a.description, a.scope, a.type, a.filter_auto, a.connection, a.default_values_url, a.query, a.target, a.datafile, a.display_order 
+		FROM forms a
+		INNER JOIN sec_groupsresults b on a.parent_id = b.result_id
+		INNER JOIN sec_users c on c.group_id=b.group_id
+		WHERE a.enabled = 1
+		and LOWER(c.user_name) = LOWER(:user_name)
+		order by a.display_order asc"		
 	),
 	"MonitrallFieldsByForm" => array(
 		"id" => "MonitrallFieldsByForm",		
@@ -154,6 +188,18 @@ ORDER BY display_order ASC"
 		"connection" => "monitralldb",
 		"query" => "SELECT a.id, a.name, a.description, a.display_order FROM dashboards a WHERE a.enabled = 1"
 	),
+	"MonitrallDashboardsUser" => array(
+		"id" => "MonitrallDashboardsUser",		
+		"connection" => "monitralldb",
+		"query" => "SELECT distinct a.id, a.name, a.description, a.display_order 
+        	FROM dashboards a 
+        	INNER JOIN dashresults b ON b.dash_id = a.id
+        	INNER JOIN sec_groupsresults c ON b.result_id=c.result_id 
+        	INNER JOIN sec_users d on d.group_id=c.group_id
+        	WHERE a.enabled = 1
+        	and LOWER(d.user_name) = LOWER(:user_name)
+        	ORDER BY a.display_order"
+	),
 	"MonitrallDashResultsByDashId" => array(
 		"id" => "MonitrallDashResultsByDashId",		
 		"connection" => "monitralldb",
@@ -162,6 +208,21 @@ ORDER BY display_order ASC"
 			INNER JOIN dashboards c ON a.dash_id = c.id
 			WHERE a.dash_id=:dash_id 
 			AND b.display = 1
+			AND b.enabled = 1 
+			AND c.enabled = 1
+			ORDER BY a.display_order"
+	),
+	"MonitrallDashResultsByDashIdUser" => array(
+		"id" => "MonitrallDashResultsByDashIdUser",		
+		"connection" => "monitralldb",
+		"query" => "SELECT a.dash_id, a.result_id, a.display_order, b.name FROM dashresults a 
+			INNER JOIN results b ON a.result_id = b.id
+			INNER JOIN dashboards c ON a.dash_id = c.id
+			INNER JOIN sec_groupsresults d ON a.result_id = d.result_id
+			INNER JOIN sec_users e ON e.group_id=d.group_id
+			WHERE a.dash_id=:dash_id 
+			AND b.display = 1
+			and LOWER(e.user_name) = LOWER(:user_name)
 			AND b.enabled = 1 
 			AND c.enabled = 1
 			ORDER BY a.display_order"

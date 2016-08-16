@@ -6,7 +6,7 @@
  * @copyright   2013,2014 Constantinos Evangelou
  * @link        http://_________
  * @license     The MIT License (MIT)
- * @version     1.2.2
+ * @version     2.0
  *
  * MIT LICENSE
  *
@@ -40,6 +40,7 @@
  * @package 
  * @author  Constantinos Evangelou <gieglas@gmail.com>
  * @since   Version 1.0
+ * @since Version 2.0 Added support for authmon.
  */
 
 /*TODO: Restrict depending on access level all functions
@@ -51,14 +52,15 @@ dependency : slim
 */
 require_once 'common.php';
 require 'Slim/Slim.php';
+require_once '../authmon/api/authmon.php';
 
 $app = new Slim();
-$app->post('/syncServices','syncServices');
+$app->post('/syncServices/:name','syncServices');
 $app->post('/getResults/:name', 'getResults');
 $app->get('/getResultsGroupList', 'getResultsGroupList');
 $app->post('/getConnectionsList', 'getConnectionsList');
-$app->post('/processForm', 'processForm');
-$app->get('/test','doTest');
+/*$app->post('/processForm', 'processForm');
+$app->get('/test','doTest');*/
 $app->run();
 
 //---------------------------------------------------------------
@@ -74,7 +76,7 @@ function getConnectionsList() {
 }
 
 //---------------------------------------------------------------
-function syncServices() {
+function syncServices($name) {
 	//the request data must be of the format:
 	// [{'name':'PROCESSNAME','data':'PROCESSDATA'},{'name':'PROCESSNAME','data':PROCESSDATA}]
 	//	PROCESSNAME = 'getResultsGroupList' | 'getResults' | 'processForm'
@@ -83,20 +85,37 @@ function syncServices() {
 	//				the PROCESSDATA is a string with the id of the result e.g. 'TestPercent'
 	//				for 'processForm' is an object of type {'name':'FORMNAME','data':FORMDATA}
 	
-	$request = Slim::getInstance()->request();
-	//get the response data
-	$requestData = json_decode($request->getBody());
-
+	$request = null;
+    $response = null;
+	$requestData = null;
+	$token='';
+	$authmonLogin=null;
+	
+    //get token etc
+    commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
+	
+	//check if is authorized
+    // login 
+    $authmonLogin = new authmon($token);
+    if (!$authmonLogin->isAuthorized($name)) {
+		//login response object
+        $responseObj = feedbackResponse('Not Authorized.');
+        //response status = 401 Unauthorized
+        echo json_encode($responseObj) . '  ';
+        $response->status(401);
+        return false;		
+	}
+	
 	$responseStr = "[";
 	$i = 0;
 	foreach($requestData as $res) {
 		//get the name of the process
 		$name = $res->name;
 		switch ($name) {
-			case 'getResultsGroupList':
+			/*case 'getResultsGroupList':
 				$groups=array();				
 				$responseStr = $responseStr . ($i==0?'':',') . '{"name":"' . $name . '","data":' . _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms"),_getMonitrallObjects("Dashboards")) . "}";
-				break;
+				break;*/
 			case 'getResults':
 				$resultName = $res->data->name;
 				$dataIn = $res->data->data;
@@ -114,21 +133,60 @@ function syncServices() {
 }
 //---------------------------------------------------------------
 function getResultsGroupList() {
-	echo _getGroupData(_getMonitrallObjects("Groups"),_getMonitrallObjects("Results"),_getMonitrallObjects("Forms"),_getMonitrallObjects("Dashboards"));	
+    $request = null;
+    $response = null;
+	$requestData = null;
+	$token='';
+	$authmonLogin=null;
+	
+    //get token etc
+    commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
+    //check if is logged
+    // login 
+    $authmonLogin = new authmon($token);
+    if (!$authmonLogin->isLoggedIn()) {
+        //login response object
+        $responseObj = feedbackResponse('Not Authorized.');
+        //response status = 401 Unauthorized
+        echo json_encode($responseObj) . '  ';
+        $response->status(401);
+        return false;
+    }
+    //TODO: HERE: isLoggedIn OR isAuthorized
+	echo _getGroupData(_getMonitrallObjects("Groups",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Results",null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Forms", null, $authmonLogin->id, $authmonLogin->isAdmin),_getMonitrallObjects("Dashboards", null, $authmonLogin->id, $authmonLogin->isAdmin),$authmonLogin->id, $authmonLogin->isAdmin);
 }
 
 
 //---------------------------------------------------------------
 function getResults($name) {	
-	$request = Slim::getInstance()->request();
+	$request = null;
+    $response = null;
+	$requestData = null;
+	$token='';
+	$authmonLogin=null;
+	
+    //get token etc
+    commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
+    //check if is authorized
+    // login 
+    $authmonLogin = new authmon($token);
+    if (!$authmonLogin->isAuthorized($name)) {
+		//login response object
+        $responseObj = feedbackResponse('Not Authorized.');
+        //response status = 401 Unauthorized
+        echo json_encode($responseObj) . '  ';
+        $response->status(401);
+        return false;		
+	}
+    
 	//get the response data
-	$parameters = json_decode($request->getBody());
+	$parameters = $requestData;
 
 	echo _getData($name,_getMonitrallObjects("Results",$name),_getMonitrallObjects("FormsByResultId",$name),_getMonitrallObjects("Connections"),$parameters);
 }
 
 //---------------------------------------------------------------
-function processForm() {
+/*function processForm() {
 	$request = Slim::getInstance()->request();
 
 	//get the response data
@@ -147,5 +205,6 @@ function doTest(){
 	echo _printCompareResult(array(_getResultCompareData("TestPercent")));
 	//print_r(_getResultCompareData("PingTest"));
 	
-}
+}*/
+
 ?>

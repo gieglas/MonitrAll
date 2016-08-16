@@ -2,10 +2,10 @@
  * MonitrAll - Monitor anything 
  *
  * @author      Constantinos Evangelou <gieglas@gmail.com>
- * @copyright   2013,2014 Constantinos Evangelou
+ * @copyright   2013-2016 Constantinos Evangelou
  * @link        http://_________
  * @license     The MIT License (MIT)
- * @version     1.2.2
+ * @version     2.0
  *
  * MIT LICENSE
  *
@@ -38,7 +38,8 @@
  *
  * @package 
  * @author  Constantinos Evangelou <gieglas@gmail.com>
- * @since   Version 1.0
+ * @since Version 1.0
+ * @since Version 2.0 Added support for authmon. 
  */
 
 //create the app object. all classes and objects to be created under app Object
@@ -139,7 +140,7 @@ var appRouter = {
             });
 			//login
 			this.get('#login', function() {
-				window.location.replace('webapp/login/');
+				window.location.replace('authmon/?r=../');
 			});
 			//dashboard
 			this.get('#dashboards/:dashid', function() {
@@ -402,6 +403,7 @@ var appRouter = {
 			type: 'post',
 			cache: false,
 			contentType: 'application/json',
+			headers: {"Authorization": "Bearer "+ localStorage.token},
 			url: url, //use the api
 			//this is a special case. This ajax call gets the data for our
 			// model so it need to finish before we can do anything else
@@ -413,17 +415,20 @@ var appRouter = {
 				resultsGroupsModel.tempServiceData = data;
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				utils.showMessage('Error', 'An error has occured. ' + textStatus , 'alert-error');
+				authmonInApp.ajaxError(jqXHR, textStatus, errorThrown);
 			}
 		});
 	},	
 	getResultsGroupList:function () {		
+		//login: renew token
+        authmonInApp.renewTokenCommon();
 		// ajax request
 		//:TODO loading msg	
 		$.ajax({
 			type: 'GET',
 			cache: false,
 			contentType: 'application/json',
+			headers: {"Authorization": "Bearer "+ localStorage.token},
 			url: 'api/getResultsGroupList', //use the api
 			//this is a special case. This ajax call gets the data for our
 			// model so it need to finish before we can do anything else
@@ -434,16 +439,19 @@ var appRouter = {
 				appRouter.responseResponse('getResultsGroupList',data,null,null,null,null);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				utils.showMessage('Error', 'An error has occured. ' + textStatus , 'alert-error');
+				authmonInApp.ajaxError(jqXHR, textStatus, errorThrown);
 			}
 		});			
     },
     getResults:function(groupIndexId,itemIndexId,isFront,dataIn){
+        //login: renew token
+        authmonInApp.renewTokenCommon();
         // ajax request
 		$.ajax({
 			type: 'POST',
 			cache: false,
 			contentType: 'application/json',
+			headers: {"Authorization": "Bearer "+ localStorage.token},
 			//----------------------use js Model data to find the ID of the result (from the config)
 			url: 'api/getResults/' + resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].id, //use the api
 			dataType: "json",
@@ -454,17 +462,20 @@ var appRouter = {
 				appRouter.responseResponse('getResults',data,groupIndexId,itemIndexId,null,isFront);				
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				utils.showMessage('Error', 'An error has occured. ' + textStatus , 'alert-error');
+				authmonInApp.ajaxError(jqXHR, textStatus, errorThrown);
 			}
 		});		
     },
-    processForm:function(groupIndexId,itemIndexId,formIndexId,dataIn){
+    /*processForm:function(groupIndexId,itemIndexId,formIndexId,dataIn){
+        //login: renew token
+        authmonInApp.renewTokenCommon();
         //ajax request		
 		$.ajax({
 			type: 'POST',
 			cache: false,
 			contentType: 'application/json',
 			url: 'api/processForm',
+			headers: {"Authorization": "Bearer "+ localStorage.token},
 			dataType: "json",
 			data: JSON.stringify(dataIn),
 			success: function(data) {				
@@ -476,14 +487,18 @@ var appRouter = {
 				utils.hideModal();
 			}
 		});
-    },
+    },*/
     syncServices:function(dataIn,groupIndexId,itemIndexId,formIndexId,isFront) {
+        //login: renew token
+        authmonInApp.renewTokenCommon();
+        
         //ajax request		
 		$.ajax({
 			type: 'POST',
 			cache: false,
 			contentType: 'application/json',
-			url: 'api/syncServices',
+			headers: {"Authorization": "Bearer "+ localStorage.token},
+			url: 'api/syncServices/' + resultsGroupsModel.groupsData[groupIndexId].items[itemIndexId].id, //use the api
 			dataType: "json",
 			data: JSON.stringify(dataIn),
 			success: function(data) {		
@@ -494,7 +509,7 @@ var appRouter = {
 				}				
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				utils.showMessage('Error', 'An error has occured while adding. ' + textStatus , 'alert-error');
+				authmonInApp.ajaxError(jqXHR, textStatus, errorThrown);
 				utils.hideModal();
 			}
 		});
@@ -737,7 +752,8 @@ var resultsViews = {
 		var template =$('#formCommonTmpl').html();
 		//add conditions to data
 		//Extend the object with functions to decide what input type it is		
-		data.isText= function () {return (this.type.toLowerCase() == "text"?true:false);};		
+		data.isText= function () {return (this.type.toLowerCase() == "text"?true:false);};
+		data.isPassword= function () {return (this.type.toLowerCase() == "password"?true:false);};
 		data.isTextArea= function () {return (this.type.toLowerCase() == "textarea"?true:false);};		
 		data.isSelect= function () {return (this.type.toLowerCase() == "select"?true:false);};
 		data.isTypehead= function () {return (this.type.toLowerCase() == "typehead"?true:false);};
@@ -1183,6 +1199,9 @@ $(document).ready(function () {
 	/*if ($.browser.mobile) {
 		alert('is mobile');
 	}*/
+	//if (!authmonInApp.init()) return false;
+	//change name on the screen
+    $('#loggedInAs').html(tokenobj.name);
 	MonitorAllApp.currentParams = null;	
     appRouter.init();
 	resultsViews.init();	

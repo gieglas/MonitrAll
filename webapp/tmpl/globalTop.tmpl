@@ -9,7 +9,7 @@
           <a class="brand" href="#">MonitrAll</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              <i id="refreshIcon" class="icon-refresh icon-white"></i> Logged in as <a href="#login" class="navbar-link"><?php if (!empty($_SESSION['user_name']) && ($_SESSION['user_is_logged_in'])) {echo $_SESSION['user_name'];}?></a>              
+              <i id="refreshIcon" class="icon-refresh icon-white"></i> Logged in as <a href="#login" id="loggedInAs" class="navbar-link"></a> 
             </p>
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>

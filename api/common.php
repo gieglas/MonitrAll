@@ -3,10 +3,10 @@
  * MonitrAll - Monitor anything 
  *
  * @author      Constantinos Evangelou <gieglas@gmail.com>
- * @copyright   2013,2014 Constantinos Evangelou
+ * @copyright   2013-2016 Constantinos Evangelou
  * @link        http://_________
  * @license     The MIT License (MIT)
- * @version     1.2.2
+ * @version     2.0
  *
  * MIT LICENSE
  *
@@ -40,6 +40,7 @@
  * @package 
  * @author  Constantinos Evangelou <gieglas@gmail.com>
  * @since   Version 1.0
+ * @since Version 2.0 Added support for authmon.
  */
 
 require_once 'config/monitrallQueries.php';
@@ -369,7 +370,7 @@ function _getOpenPDOConnection($connection) {
 }
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getGroupData($groupData,$itemsData,$formsData,$dashBoards) {
+function _getGroupData($groupData,$itemsData,$formsData,$dashBoards,$userId='',$isAdmin=false) {
 	//use global $results_config
 	global $monitrall_results_config;
 	$arrColumns = array(); 
@@ -391,7 +392,17 @@ function _getGroupData($groupData,$itemsData,$formsData,$dashBoards) {
 		$parameterObj=new stdClass();
 		$parameterObj->name="dash_id";
 		$parameterObj->value=$res["id"];
-		$dbObject = _getData("MonitrallDashResultsByDashId",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+		
+		//return the results array
+		if ($isAdmin) {
+			//check if is admin else use different query
+			$dbObject = _getData("MonitrallDashResultsByDashId",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");
+		} else {
+			$parameterObj1=new stdClass();
+			$parameterObj1->name="user_name";
+			$parameterObj1->value=$userId;
+			$dbObject = _getData("MonitrallDashResultsByDashIdUser",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj,$parameterObj1),"ARRAY");	
+		}
 		
 		$returnObject = array();
 		foreach($dbObject as $res) {
@@ -467,7 +478,7 @@ function _getItemsLinesFormsArray($formsData,$id) {
 }
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getMonitrallGroupsFromDB($name = null) {
+function _getMonitrallGroupsFromDB($name = null,$userId='',$isAdmin=false) {
 	//use global $results_config
 	global $monitrall_results_config;		
 	//check if a name has been passed 
@@ -479,15 +490,24 @@ function _getMonitrallGroupsFromDB($name = null) {
 		return _getData("MonitrallGroupsById",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
 	} else {
 		//return the groups array
-		return _getData("MonitrallGroups",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		if ($isAdmin) {
+			//check if is admin else use different query
+			return _getData("MonitrallGroups",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		} else {
+			$parameterObj=new stdClass();
+			$parameterObj->name="user_name";
+			$parameterObj->value=$userId;
+			return _getData("MonitrallGroupsUser",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+		}
 	}	
 }
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getMonitrallResultsFromDB($name = null) {
+function _getMonitrallResultsFromDB($name = null,$userId='',$isAdmin=false) {
 	//use global $results_config
 	global $monitrall_results_config;		
 	$returnObject = array();
+	$dbObject = array();
 	$i = 0;
 	//check if a name has been passed 
 	if ($name != null) {
@@ -498,8 +518,17 @@ function _getMonitrallResultsFromDB($name = null) {
 		$dbObject = _getData("MonitrallResultsById",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
 	} else {
 		//return the results array
-		$dbObject = _getData("MonitrallResults",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		if ($isAdmin) {
+			//check if is admin else use different query
+			$dbObject = _getData("MonitrallResults",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		} else {
+			$parameterObj=new stdClass();
+			$parameterObj->name="user_name";
+			$parameterObj->value=$userId;
+			$dbObject = _getData("MonitrallResultsUser",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+		}
 	}	
+	
 	foreach($dbObject as $res) {
 		$returnObject[$res["id"]] = $res;
 	}
@@ -551,7 +580,7 @@ function _updateNotificationsNextDate($idIn,$nextDateIn) {
 
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getMonitrallFormsFromDB($name = null,$by = "id") {
+function _getMonitrallFormsFromDB($name = null,$by = "id",$userId='',$isAdmin=false) {
 	//use global $results_config
 	global $monitrall_results_config;		
 	$returnObject = array();
@@ -570,8 +599,16 @@ function _getMonitrallFormsFromDB($name = null,$by = "id") {
 		//return the forms array using name in parameters 
 		$dbObject = _getData($resultname,$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
 	} else {
-		//return the forms array
-		$dbObject = _getData("MonitrallForms",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		//return the results array
+		if ($isAdmin) {
+			//check if is admin else use different query
+			$dbObject = _getData("MonitrallForms",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+		} else {
+			$parameterObj=new stdClass();
+			$parameterObj->name="user_name";
+			$parameterObj->value=$userId;
+			$dbObject = _getData("MonitrallFormsUser",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+		}
 	}	
 	foreach($dbObject as $res) {
 		$returnObject[$res["id"]] = $res;
@@ -585,14 +622,22 @@ function _getMonitrallFormsFromDB($name = null,$by = "id") {
 }
 //--------------------------------------------------------------
 //-------PRIVATE
-function _getMonitrallDashboardsFromDB() {
+function _getMonitrallDashboardsFromDB($userId='',$isAdmin=false) {
 	//use global $results_config
 	global $monitrall_results_config;		
 	$returnObject = array();
+	$dbObject = array();
 	$i = 0;
 	//return the results array
-	$dbObject = _getData("MonitrallDashboards",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
-		
+	if ($isAdmin) {
+		//check if is admin else use different query
+		$dbObject = _getData("MonitrallDashboards",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array(),"ARRAY");	
+	} else {
+		$parameterObj=new stdClass();
+		$parameterObj->name="user_name";
+		$parameterObj->value=$userId;
+		$dbObject = _getData("MonitrallDashboardsUser",$monitrall_results_config,array(),_getMonitrallObjects("Connections"),array($parameterObj),"ARRAY");	
+	}	
 	foreach($dbObject as $res) {
 		$returnObject[$res["id"]] = $res;
 	}
@@ -601,7 +646,7 @@ function _getMonitrallDashboardsFromDB() {
 }
 //-------------------------------------------------------------
 //-------PRIVATE
-function _getMonitrallObjects($objectType,$name = null){
+function _getMonitrallObjects($objectType,$name = null,$userId='',$isAdmin=false){
 	//use global $monitrall_options
 	global $monitrall_options;
 
@@ -609,13 +654,13 @@ function _getMonitrallObjects($objectType,$name = null){
 		//get from database
 		switch ($objectType) {
 			case "Groups":
-				$returnObject=_getMonitrallGroupsFromDB($name);
+				$returnObject=_getMonitrallGroupsFromDB($name,$userId,$isAdmin);
 			break;
-			case "Results":				
-				$returnObject = _getMonitrallResultsFromDB($name);
+			case "Results":	
+				$returnObject = _getMonitrallResultsFromDB($name,$userId,$isAdmin);
 			break;
 			case "Forms":
-				$returnObject = _getMonitrallFormsFromDB($name,"id");
+				$returnObject = _getMonitrallFormsFromDB($name,"id",$userId,$isAdmin);
 			break;
 			case "FormsByResultId":
 				$returnObject = _getMonitrallFormsFromDB($name,"resultid");
@@ -629,7 +674,7 @@ function _getMonitrallObjects($objectType,$name = null){
 				$returnObject = $db_connections;	
 			break;
 			case "Dashboards":
-				$returnObject=_getMonitrallDashboardsFromDB();
+				$returnObject=_getMonitrallDashboardsFromDB($userId,$isAdmin);
 			break;
 		}			
 	return $returnObject;

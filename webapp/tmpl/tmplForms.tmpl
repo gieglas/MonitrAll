@@ -22,6 +22,14 @@
               data-trigger="change" 
               {{#isRequired}}data-required="true"{{/isRequired}} 
               type="text" name={{id}} value="{{default_value}}" placeholder="{{placeholder}}">{{/isText}}
+            {{! ----------------Password-------------------}}
+  					{{#isPassword}}<input class="formInput" 
+              {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}} 
+              {{#valid_minlength}}data-minlength={{valid_minlength}}{{/valid_minlength}}
+              {{#valid_maxlength}}data-maxlength={{valid_maxlength}}{{/valid_maxlength}}
+              data-trigger="change" 
+              {{#isRequired}}data-required="true"{{/isRequired}} 
+              type="password" name={{id}} value="{{default_value}}" placeholder="{{placeholder}}">{{/isPassword}}
             {{! ----------------TextArea-------------------}} 			    					    		
 		    		{{#isTextArea}}<textarea rows="5" class="formInput" 
               {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}}

@@ -470,3 +470,96 @@ INSERT INTO `dashresults` (`dash_id`, `result_id`, `update_date`, `display_order
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+-- Authmon -----------------------------------
+----------------------------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sec_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `sec_groups` (
+  `group_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The group id',
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The Security Group name',
+  `description` text COLLATE utf8_unicode_ci COMMENT 'The Security Group Description',
+  `enabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Set 1 to enable',
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Insert date time',
+  `update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Update date time',
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='The Security Groups Table ';
+
+--
+-- Dumping data for table `sec_groups`
+--
+
+INSERT INTO `sec_groups` (`group_id`, `name`, `description`, `enabled`, `insert_date`, `update_date`) VALUES
+('none', 'None', 'Dummy Group', 1, '2016-04-22 09:16:39', '2016-06-01 11:09:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sec_groupsresults`
+--
+
+CREATE TABLE IF NOT EXISTS `sec_groupsresults` (
+  `group_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The group id',
+  `result_id` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Result Id',
+  `update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Update date time',
+  PRIMARY KEY (`group_id`,`result_id`),
+  KEY `sec_groupsresults_ibfk_2` (`result_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Connects Security Groups table with the Results table';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sec_users`
+--
+
+CREATE TABLE IF NOT EXISTS `sec_users` (
+  `user_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The User name',
+  `is_ldap` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Set 1 to set as LDAP user',
+  `ldap_server` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The Ldap Server i.e. ldap://10.10.10.10',
+  `user_password_hash` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The User password',
+  `group_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The group id',
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The Real name',
+  `user_email` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The User email',
+  `user_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The User telephone',
+  `is_admin` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Set 1 to set as administrator',
+  `comments` text COLLATE utf8_unicode_ci COMMENT 'Any other comments',
+  `login_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The login tocken',
+  `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Latest Login date time',
+  `lock_tries` int(2) NOT NULL DEFAULT '0' COMMENT 'Number of incorrect password tries',
+  `lock_date` timestamp NULL DEFAULT NULL COMMENT 'Latest Locked date time',
+  `last_pwd_update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Latest Password Update date time',
+  `enabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Set 1 to enable',
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Insert date time',
+  `update_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Update date time',
+  PRIMARY KEY (`user_name`),
+  UNIQUE KEY `user_email_UNIQUE` (`user_email`),
+  KEY `sec_users_ibfk_1` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='The Security Users Table ';
+
+--
+-- Dumping data for table `sec_users`
+--
+
+INSERT INTO `sec_users` (`user_name`, `is_ldap`, `ldap_server`, `user_password_hash`, `group_id`, `name`, `user_email`, `user_phone`, `is_admin`, `comments`, `login_token`, `last_login_date`, `lock_tries`, `lock_date`, `last_pwd_update_date`, `enabled`, `insert_date`, `update_date`) VALUES
+('admin', 0, '', '$2y$10$647Y19pxo2rwBODB6QkoN.oHQQu6IFgeWOvX.JVC4KyENimLQk486', 'none', 'MonitrAll Administrator', 'gieglas@gmail.com', '2200000', 1, 'The administrator', NULL, '2016-07-31 19:27:39', 1, '2016-08-16 06:21:17', '2016-06-13 07:08:30', 1, '2016-04-22 09:16:56', '2016-06-10 10:49:18');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `sec_groupsresults`
+--
+ALTER TABLE `sec_groupsresults`
+  ADD CONSTRAINT `sec_groupsresults_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `sec_groups` (`group_id`),
+  ADD CONSTRAINT `sec_groupsresults_ibfk_2` FOREIGN KEY (`result_id`) REFERENCES `results` (`id`);
+
+--
+-- Constraints for table `sec_users`
+--
+ALTER TABLE `sec_users`
+  ADD CONSTRAINT `sec_users_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `sec_groups` (`group_id`);

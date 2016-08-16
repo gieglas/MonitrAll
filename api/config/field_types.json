@@ -1,5 +1,6 @@
 [
 {"name":"text","value":"text"},
+{"name":"password","value":"password"},
 {"name":"textarea","value":"textarea"},
 {"name":"select","value":"select"},
 {"name":"typehead","value":"typehead"},
