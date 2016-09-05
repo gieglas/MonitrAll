@@ -211,6 +211,7 @@ class authmonAdmin extends authmon {
             
             $login_token="";
 			$user_email="";
+			$user_name="";
             
         	//prepare SQL bind and execure
     		$query = $this->dbConnection->prepare($JWTQueries["addNewUser"]["query"]);
@@ -223,6 +224,7 @@ class authmonAdmin extends authmon {
 			        //add random login_token adding user_name
         		    $login_token= str_replace('=','',strtr(base64_encode(openssl_random_pseudo_bytes(64)), "+/=", "XXX").$fieldData->value);
         		    $query->bindParam(':login_token',$login_token);
+        		    $user_name=$fieldData->value;
 			    }
 				//set user_email
 				if ($fieldData->name == 'user_email') {
@@ -236,7 +238,7 @@ class authmonAdmin extends authmon {
     		    $this->log->addInfo(__FUNCTION__. ' - Details changed.',array ('token' => $this->token,'formdata' => $formDataIn));
             	$this->feedback = "Success";
 				//Send reset password email
-				$this->sendEmail($this->getResetPasswordEmailHTML($login_token),$user_email);
+				$this->sendEmail($this->getResetPasswordEmailHTML($login_token),$user_email,$user_name);
             	return true;
             } else {
                 return false;
@@ -334,6 +336,7 @@ class authmonAdmin extends authmon {
             if (!$this->commonChecks("isAdmin", __FUNCTION__)) return null;
             $login_token="";
 			$user_email="";
+			$user_name="";
 			
 			//get user email
 			//prepare SQL bind and execure
@@ -356,6 +359,7 @@ class authmonAdmin extends authmon {
 			    $query->bindParam(':'.$fieldData->name,$fieldData->value);
 				//add random login_token adding user_name
 				$login_token= str_replace('=','',strtr(base64_encode(openssl_random_pseudo_bytes(64)), "+/=", "XXX").$fieldData->value);
+				$user_name=$fieldData->value;
 				$query->bindParam(':login_token',$login_token);
 		    }
     		$rs=$query->execute();
@@ -364,7 +368,7 @@ class authmonAdmin extends authmon {
     		    $this->log->addInfo(__FUNCTION__. ' - Details changed.',array ('token' => $this->token,'formdata' => $formDataIn));
             	$this->feedback = "Success";
 				//Send reset password email
-				$this->sendEmail($this->getResetPasswordEmailHTML($login_token),$user_email);
+				$this->sendEmail($this->getResetPasswordEmailHTML($login_token),$user_email,$user_name);
             	return true;
             } else {
                 return false;
@@ -1235,7 +1239,7 @@ class authmon {
     * @param string $body the main body of the email
     * @param string $to the bcc emails separated by ,
     */
-    protected function sendEmail($body="",$to=null){
+    protected function sendEmail($body="",$to=null, $user_name=""){
         global $JWTOptions;
         // Create the Transport is_null
         if (!is_null($JWTOptions ['email']['username']) && !is_null($JWTOptions ['email']['password'])){
@@ -1252,7 +1256,7 @@ class authmon {
         // Create a message
         $message = Swift_Message::newInstance($JWTOptions ['email']['subject'])
           ->setFrom($JWTOptions ['email']['from'])
-          ->setBody($JWTOptions ['email']['bodytop'].$body.$JWTOptions ['email']['bodybottom'], 'text/html');
+          ->setBody(str_replace('__USERNAME__',$user_name, $JWTOptions ['email']['bodytop'].$body.$JWTOptions ['email']['bodybottom']), 'text/html');
         
         if ($to) {
     		$message->setTo(explode(",",$to));

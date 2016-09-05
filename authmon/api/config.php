@@ -33,7 +33,7 @@ $JWTOptions = array(
 	    "password" => "ec8ecaf96a3e7e", //if not used set to null
 		"subject" => "Monitrall User",
 		"bodytop" => "<html>This email was produced automatically from MonitrAll's Security module.<br>",
-		"bodybottom" => "For more details visit Monitrall.</html>",
+		"bodybottom" => "For more details visit Monitrall. <br> Username: __USERNAME__</html>",
 		"to" => "test@test.com",
 		"from" => array('noreply@monitrall.com' => 'MonitraAll Admin')
 	),
