@@ -5,6 +5,10 @@ Monitor everything
 
 MonitraAll is a simple application that basically can read data and present or run commands. The beauty of it lies in the simplicity and agility and its really helpful in monitoring and administering stuff. 
 
+Here's a simplified diagram of how it works:
+
+![Business Logic](MonitrAll_Business_Logic.jpg)
+
 Features
 --------
 
@@ -18,6 +22,11 @@ Features
 - It can get statistics by calling the `customStats.php` from the command line.
 - It can save check's status for reference or audit reasons by calling the `customChecks.php` from the command line
 - It can send emails when by calling `customMotifications.php` from the command line with results, and with preference to condition.
+
+Demo
+-----
+
+There is a demo at http://gieglas.byethost10.com/monitralldemo . It's a bit outdated (authenitcation module and dashboards are not included) but you can get the idea. The demo actually uses a snapshot of actual data from a live environment. 
 
 How to use it
 -------------
