@@ -2,10 +2,10 @@
  * MonitrAll - Monitor anything 
  *
  * @author      Constantinos Evangelou <gieglas@gmail.com>
- * @copyright   2013-2016 Constantinos Evangelou
+ * @copyright   2013-2017 Constantinos Evangelou
  * @link        http://_________
  * @license     The MIT License (MIT)
- * @version     2.0
+ * @version     2.1
  *
  * MIT LICENSE
  *
@@ -968,7 +968,7 @@ var resultsViews = {
 		//DEBUG:  alert(html);
 		//datatable
 		if ((data.data.length > 0) && (!isFront)){
-			$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25});
+			$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25,"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]});
 		}		
 	},
 	renderModuleDataDetails: function(data,groupIndexId,itemIndexId,isFront){
@@ -1110,7 +1110,7 @@ var resultsViews = {
 		if ((ui_type == 'ConditionTable') && (!isFront)) {		
 			//datatable
 			if (data.data.length > 0) {
-				$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25});
+				$('.table').dataTable({"bLengthChange": true, "iDisplayLength": 25,"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]});
 			}						
 		}
 	}, 

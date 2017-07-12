@@ -374,6 +374,9 @@ font-weight: bold;
 }
 
 @media print {
+  .visible-print  { display: inherit !important; }
+  .hidden-print   { display: none !important; }
+
 /*Box color schemes*/
 .box-default-clrs{background-color: #fcfcfc !important; -webkit-print-color-adjust: exact; }
 

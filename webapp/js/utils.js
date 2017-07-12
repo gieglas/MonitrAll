@@ -2,10 +2,10 @@
  * MonitrAll - Monitor anything 
  *
  * @author      Constantinos Evangelou <gieglas@gmail.com>
- * @copyright   2013,2014 Constantinos Evangelou
+ * @copyright   2013-2017 Constantinos Evangelou
  * @link        http://_________
  * @license     The MIT License (MIT)
- * @version     1.2.2
+ * @version     2.1
  *
  * MIT LICENSE
  *
@@ -135,12 +135,14 @@ window.utils = {
             str += line + '\r\n';
         }
          // Data URI
-         csvData = "data:text/csv;charset=utf-8," + encodeURIComponent(str);
+         //csvData = "data:text/csv;charset=utf-8," + encodeURIComponent(str);
 
          $(this)
             .attr({
             'download': filename,
-                'href': csvData,
+                'href': URL.createObjectURL(new Blob([str], {
+                  type: 'text/csv;charset=utf-8;'
+            })),
                 'target': '_blank'
         })
     },
@@ -151,12 +153,14 @@ window.utils = {
         var str = JSON.stringify(objArray)
 
          // Data URI
-         jsonData = "data:text;charset=utf-8," + encodeURIComponent(str);         
+         //jsonData = "data:text;charset=utf-8," + encodeURIComponent(str);         
 
          $(this)
             .attr({
             'download': filename,
-                'href': jsonData,
+                'href': URL.createObjectURL(new Blob([str], {
+                  type: 'text;charset=utf-8;'
+            })),
                 'target': '_blank'
         })
     },
