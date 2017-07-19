@@ -7,6 +7,14 @@ footer {
 	/*color:#E5E5E5;*/
 }
 
+.size20 {
+    width: 20% !important;
+}
+
+.size80 {
+    width: 80% !important;
+}
+
 /*body*/
 #body {
 	padding-top: 2px;
@@ -376,7 +384,8 @@ font-weight: bold;
 @media print {
   .visible-print  { display: inherit !important; }
   .hidden-print   { display: none !important; }
-
+  .dataTables_paginate  , .dataTables_length, .dataTables_filter{ display: none !important; }  
+  
 /*Box color schemes*/
 .box-default-clrs{background-color: #fcfcfc !important; -webkit-print-color-adjust: exact; }
 

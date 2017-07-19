@@ -987,7 +987,7 @@ var resultsViews = {
 		}
 		//fill in template the headers and fill in template the data
 		for(var i = 0; i < headersLength; i++){
-			template = template +'<tr><td class="tableDetailsTitle"><b>' + headers[i] + '</b></td><td class="details-markdown">{{' + headers[i] + '}}</td></tr>';
+			template = template +'<tr><td class="tableDetailsTitle size20"><b>' + headers[i] + '</b></td><td class="details-markdown size80">{{' + headers[i] + '}}</td></tr>';
 		}		
 		template = template + '<tr class="tableDetailsTr"><td></td><td>&nbsp;</td></tr>{{/.}}</tbody></table><hr>';
 		//----------------------------------------------------

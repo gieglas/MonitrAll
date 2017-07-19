@@ -35,15 +35,15 @@
     <script id="moduleTmpl" type="text/template">
       <div class="clearfix">
         <div class="pull-left"><h4>{{name}}</h4></div>        
-        <div class="pull-right"><a href="#" data-id="{{id}}" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
-        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn csv-button">CSV</a></div>
-        <div class="pull-right"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn json-button">JSON</a></div>
+        <div class="pull-right hidden-print"><a href="#" data-id="{{id}}" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn refresh-button"><i class="icon-refresh"></i></a></div>
+        <div class="pull-right hidden-print"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn csv-button">CSV</a></div>
+        <div class="pull-right hidden-print"><a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" class="btn json-button">JSON</a></div>
       </div>
       <div class="module-description">
         {{description}}
       </div>      
       {{#hasForms}}<div class="clearfix">
-      {{#forms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" class="results-button"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/forms}}
+      {{#forms}}<a href="#" data-group="{{group_index_num}}" data-item="{{index_num}}" data-form="{{form_index_num}}" class="results-button hidden-print"><span class="label label-info">{{#hasIcon}}<i class="{{icon}} icon-white"></i> {{/hasIcon}}{{name}}</span></a>{{/forms}}
       </div>{{/hasForms}}
       <div id="module-data"></div>         
     </script>
