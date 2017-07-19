@@ -757,7 +757,8 @@ var resultsViews = {
 		data.isTextArea= function () {return (this.type.toLowerCase() == "textarea"?true:false);};		
 		data.isSelect= function () {return (this.type.toLowerCase() == "select"?true:false);};
 		data.isTypehead= function () {return (this.type.toLowerCase() == "typehead"?true:false);};
-		//data.isDate= function () {return (this.type.toLowerCase() == "date"?true:false);};
+		data.isDate= function () {return ((this.valid_test == "dateIso") || (this.valid_test == "dateTimeIso")?true:false);};
+		data.isDateTime= function () {return (this.valid_test == "dateTimeIso"?true:false);};
 		data.isCheckList= function () {return (this.type.toLowerCase() == "checklist"?true:false);};		
 		data.isRadio= function () {return (this.type.toLowerCase() == "radio"?true:false);};		
 		data.isRequired= function () {return (this.required != "0"?true:false);};
@@ -803,7 +804,8 @@ var resultsViews = {
 				$('input:checkbox[name='+data.form.fields[i].id+']').val([data.form.fields[i].default_value]);
 			}
 		}		
-
+		//datetimepicker
+		$('.datetimepicker').datetimepicker();
 		//parley
 		$( '#'+data.form.id ).parsley();
 		//Markdown with Pagedown

@@ -15,13 +15,16 @@
       					<td><label>{{title}}</label></td>
       					<td>
             {{! ----------------Text-------------------}}
-  					{{#isText}}<input class="formInput" 
+					{{#isDate}}<div id="{{id}}datetimepicker" class="input-append date datetimepicker">{{/isDate}}
+					{{#isText}}<input class="formInput" 
               {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}} 
               {{#valid_minlength}}data-minlength={{valid_minlength}}{{/valid_minlength}}
               {{#valid_maxlength}}data-maxlength={{valid_maxlength}}{{/valid_maxlength}}
               data-trigger="change" 
               {{#isRequired}}data-required="true"{{/isRequired}} 
+			  {{#isDate}}data-format="yyyy-MM-dd{{/isDate}}{{#isDateTime}} hh:mm:ss{{/isDateTime}}{{#isDate}}"{{/isDate}}
               type="text" name={{id}} value="{{default_value}}" placeholder="{{placeholder}}">{{/isText}}
+			  {{#isDate}}<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span></div>{{/isDate}}
             {{! ----------------Password-------------------}}
   					{{#isPassword}}<input class="formInput" 
               {{#valid_test}}data-type="{{valid_test}}"{{/valid_test}} 
