@@ -14,7 +14,15 @@ function GetXMLAttributeValue ($url,$note,$attrname) {
 			if ($note == null) {
 				return $simpleXml->attributes()->$attrname;
 			} else {
-				return $simpleXml->$note->attributes()->$attrname;
+				//split with ,
+				$noteArr=  explode(',',$note);
+				//get nested note within using the note argument
+				foreach($noteArr as $noteArrObj) {
+					$simpleXml = $simpleXml->{$noteArrObj};
+				}
+				//return $simpleXml->$note->attributes()->$attrname;
+				//DesignTransactionBody,TransactionContentDetails,TransactionData,DesignDetails,Design,DesignIdentifier
+				return $simpleXml;
 			}
 			
 	} catch (Exception $e) {

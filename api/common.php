@@ -41,14 +41,26 @@
  * @author  Constantinos Evangelou <gieglas@gmail.com>
  * @since   Version 1.0
  * @since Version 2.0 Added support for authmon.
+ * @since Version 2.2 Added monolog support.
  */
-
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'config/monitrallQueries.php';
 require_once 'config/config.php';
 
+//logger
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
+
+$monologOptionsMonitrAll = array (
+	'path' => __DIR__.'/logs/run.log',
+	'maxfiles' => 30,
+	'level' => Logger::INFO
+);
+
 //---------------------------------------------------------------
 //-------PRIVATE
-function _getData($name,$itemsData,$formData,$connections,$parameters = array(),$format="JSON") {
+function _getData($name,$itemsData,$formData,$connections,$parameters = array(),$format="JSON") {	
 	//run code depending on provider ... e.g. handle differently mySQL with SQL Server and execute
 	switch ($connections[$itemsData[$name]["connection"]]["provider"])
 	{		
@@ -93,6 +105,9 @@ function _getData($name,$itemsData,$formData,$connections,$parameters = array(),
 			$rs = null;
 			$conn = null;
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
 		} 
 		break;
@@ -147,6 +162,9 @@ function _getData($name,$itemsData,$formData,$connections,$parameters = array(),
 			}
 
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
 		} 
 	break;
@@ -195,6 +213,9 @@ function _getData($name,$itemsData,$formData,$connections,$parameters = array(),
 			}
 
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
 		} 
 	break;
@@ -248,6 +269,9 @@ function _doForm($requestData,$formData,$connections,$format="JSON") {
 			
 			
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			//depending on the format return the appropriate type
 			if ($format=="JSON") {
 				return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
@@ -291,6 +315,9 @@ function _doForm($requestData,$formData,$connections,$format="JSON") {
 			}
 
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
 		} 
 	break;
@@ -326,6 +353,9 @@ function _doForm($requestData,$formData,$connections,$format="JSON") {
 			return $returnStr;			
 
 		} catch(exception $e) { 
+			//monolog
+			$logger = prepareMonolog();
+			$logger->addError(__FUNCTION__ .' - ' .$e->getMessage());
 			return '{"error":{"text":"'. $e->getMessage() .'"}}'; 
 		} 
 	break;
@@ -850,5 +880,14 @@ function _is_cli()
 {	
 	echo  php_sapi_name() . "<br>";
     return php_sapi_name() === 'cli';
+}
+//-------------------------------------------------------------
+//-------PRIVATE
+/* Prepare Monolog */
+function prepareMonolog() {
+	global $monologOptionsMonitrAll;
+	
+	$monologInst = new Logger("MonitrAll");
+	return $monologInst->pushHandler(new RotatingFileHandler ($monologOptionsMonitrAll['path'],$monologOptionsMonitrAll['maxfiles'], $monologOptionsMonitrAll['level']));
 }
 ?>

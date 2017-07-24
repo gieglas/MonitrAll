@@ -41,6 +41,7 @@
  * @author  Constantinos Evangelou <gieglas@gmail.com>
  * @since   Version 1.0
  * @since Version 2.0 Added support for authmon.
+ * @since Version 2.2 Added monolog support.
  */
 
 /*TODO: Restrict depending on access level all functions
@@ -93,7 +94,10 @@ function syncServices($name) {
 	
     //get token etc
     commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
-	
+	//monolog
+	$logger = prepareMonolog();
+	$logger->addInfo(__FUNCTION__ . ' - Token: '  .$token . ' - Name: ' . $name,$requestData);
+
 	//check if is authorized
     // login 
     $authmonLogin = new authmon($token);
@@ -141,6 +145,9 @@ function getResultsGroupList() {
 	
     //get token etc
     commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
+	//monolog
+	$logger = prepareMonolog();
+	$logger->addInfo(__FUNCTION__ . ' - Token: '  .$token);
     //check if is logged
     // login 
     $authmonLogin = new authmon($token);
@@ -167,6 +174,9 @@ function getResults($name) {
 	
     //get token etc
     commonRequest(Slim::getInstance(),$request,$response,$requestData,$token);
+	//monolog
+	$logger = prepareMonolog();
+	$logger->addInfo(__FUNCTION__ . ' - Token: '  .$token . ' - Name: ' . $name,$requestData);
     //check if is authorized
     // login 
     $authmonLogin = new authmon($token);
