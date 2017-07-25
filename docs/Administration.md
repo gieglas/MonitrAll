@@ -456,7 +456,31 @@ $JWTOptions = array(
 ); 
 ```
 
-6. Todo
+6. Logs
+------
+Log files are located at:
+- `\authmon\api\logs` for **Authmon**
+  - Contains all information regarding login, assignmnent of Tokens, changes in User's database, failed logins and so on
+  - Example log entry:
+    [2017-07-24 07:19:21] authmon.INFO: signIn - Logged in with userid admin {"token":"xxx.xxx.xxx"} []
+- `\MonitrAll\api\logs` for **MonitrAll**
+  - Contains all information regarding requests and errors made through MonitrAll. For each request the token used is marked which can be traced to the user logged in by the Authmon log file. 
+  - Example log entry:
+<span style="color:blue">[2017-07-24 07:16:38]</span> MonitrAll.INFO: <span style="color:red">syncServices</span> - Token: <span style="font-weight:bold">xxx.xxx.xxx</span> - Name: <span style="color:green">AdminGroupsModule</span> <span style="color:Maroon">["[object] (stdClass: {\"data\":{\"data\":[{\"name\":\"idIn\",\"value\":\"Test\"},{\"name\":\"nameIn\",\"value\":\"Test Modules\"},{\"name\":\"descriptionIn\",\"value\":\"Test.\"},{\"name\":\"display_orderIn\",\"value\":\"0\"},{\"name\":\"enabledIn\",\"value\":\"1\"},{\"name\":\"lineid\",\"value\":\"Test\"}],\"name\":\"AdminEditGroups\"},\"name\":\"processForm\"})","[object] (stdClass: {\"data\":{\"data\":[],\"name\":\"AdminGroupsModule\"},\"name\":\"getResults\"})"]</span> []
+  Explanation:
+    - <span style="color:blue">[2017-07-24 07:16:38]</span>: The date and time of the event
+    - <span style="color:red">syncServices</span>: The type of the event (basically the API service called).:
+      - `getResults`
+        Returns the data for the results. Accepts an argument `name` and adittional parameters
+      - `getResultsGroupList`
+        Returns the data for the group list and results to be used on the client side
+      - `syncServices`
+        eturns any of the services described below when requested in sequence (an array is used)
+    - <span style="font-weight:bold">xxx.xxx.xxx</span>: Token used
+    - <span style="color:green">AdminGroupsModule</span>: The Result id
+    - <span style="color:Maroon">["[object] (stdClass: {\"data\":{\"data\":[{\"name\":\"idIn\",\"value\":\"Test\"},{\"name\":\"nameIn\",\"value\":\"Test Modules\"},{\"name\":\"descriptionIn\",\"value\":\"Test.\"},{\"name\":\"display_orderIn\",\"value\":\"0\"},{\"name\":\"enabledIn\",\"value\":\"1\"},{\"name\":\"lineid\",\"value\":\"Test\"}],\"name\":\"AdminEditGroups\"},\"name\":\"processForm\"})","[object] (stdClass: {\"data\":{\"data\":[],\"name\":\"AdminGroupsModule\"},\"name\":\"getResults\"})"]</span>: Form data
+
+7. Todo
 -----
 - ~~Better Login and Security~~
 - ~~Call results by name rather by id~~

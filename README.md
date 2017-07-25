@@ -40,7 +40,7 @@ The system has a `front application` and a `server side API`. The front side for
 
 Here's a brief explanation for the basic web services. 
 
-###getResult###
+###getResult
 
 ![Diagram](MonitrAll_Diagram.jpg)
 
@@ -75,43 +75,43 @@ Another way is calling MonitrAll's views from the command line, saving the resul
 What can it be used for
 ------------------------
 
-###Monitoring the green light on the server ###
+###Monitoring the green light on the server
 
 Create checks to monitor your servers with the simple green, orange, red rules. For example a script that returns the `ping` results. 
 
-###Query values from any database ###
+###Query values from any database
 
 For example get values from tables in the databases that holds application status. 
 
-###Administrate systems with form s###
+###Administrate systems with form s
 
 Make changes using database commans, scripts or webservices to administer stuff.
 
-###Get status of your environment with daily email ###
+###Get status of your environment with daily email
 
 Send emails to the right people with the checks (green, orange, red) that concern them at scheduled times. 
 
-###Set KPIS and monitor them ###
+###Set KPIS and monitor them
 
 For example create a check to get the sum of sales amounts and set the green, orange, red rules accordingly. You can even use the same check to send emails when for example `red` is reached. 
 
-###Get email notifications on critical checks ###
+###Get email notifications on critical checks
 
 Every morning I get an email of all the critical daily checks I need to perform. Saves me a lot of time.
 
-###Statistics ###
+###Statistics
 
 Create results with numeric values and call the customStats.php daily to save these values in the statistics table. 
 
-###Log Checks###
+###Log Checks
 
 Save the green, orange, red status of selected checks using the customChecks.php in the checks table.
 
-###Data quality compliance ###
+###Data quality compliance
 
 Perform queries to get the data quality and present them as a green, orange, red check in terms of data quality compliance. 
 
-###Reconsile synced database results ###
+###Reconsile synced database results
 
 Perform queries to reconsile data and present them as a green, orange, red check. 
 

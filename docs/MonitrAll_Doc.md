@@ -308,7 +308,7 @@ Dependencies
 Methods
 -----------
 
-###_getData###
+###_getData
 
 Gets the data from any source defined in connections in `config/config.php`. 
 It can get data from (*Provider Types*) :
@@ -327,7 +327,7 @@ It can get data from (*Provider Types*) :
 
 The results are returned in the format defined in the `$format` argument.
 
-###_doForm###
+###_doForm
 
 Executes commands on any source defined in connections in `config/config.php`. 
 It can execute with (*Provider Types*) :
@@ -381,7 +381,7 @@ The results are returned in the format defined in the `$format` argument. The re
 {"error":{"text":"error message"}}
 ```
 
-###_getOpenPDOConnection###
+###_getOpenPDOConnection
 
 Creates the PDO Connection object depending on the provider name. Currently it supports the following providers:
 
@@ -421,7 +421,7 @@ $connStr = "odbc:Driver={Adaptive Server Enterprise};server=".$myServer.";port="
 $conn = new PDO($connStr,$myUser,$myPass);  
 ```
 
-###_getGroupData###
+###_getGroupData
 
 Returns an array of Group Objects (with the repsected Result objects for each group). It uses `_getGroupItemsArray` to complete the results objects. 
 
@@ -432,7 +432,7 @@ _getGroupData($groupData,$itemsData,$formsData,$dashBoards)
 *NOTE*
 The `$groupData`,`$itemsData`,`$formsData`,`$dashBoards` must already be retreived from the DB
 
-###_getGroupItemsArray###
+###_getGroupItemsArray
 
 Returns an array of results objects for a group (defined by `$id`). It also includes all forms which gets with `_getItemsFormsArray` and `_getItemsLinesFormsArray`.
 For security reasons the `connection` and `query` values are not copied.
@@ -444,7 +444,7 @@ _getGroupItemsArray($data,$formsData,$id,$groupIndexNum)
 The `$groupData`,`$itemsData`,`$formsData` must already be retreived from the DB
 
 
-###_getItemsFormsArray###
+###_getItemsFormsArray
 
 Returns an array of Forms specific to a Result. 
 For security reasons the `connection` and `query` values are not copied.
@@ -456,7 +456,7 @@ _getItemsFormsArray($formsData,$id)
 *NOTE*
 The `$groupData`,`$itemsData`,`$formsData` must already be retreived from the DB
 
-###_getItemsLinesFormsArray###
+###_getItemsLinesFormsArray
 
 Returns an array of Line Forms specific to a Result. 
 For security reasons the `connection` and `query` values are not copied.
@@ -468,7 +468,7 @@ _getItemsLinesFormsArray($formsData,$id)
 *NOTE*
 The `$groupData`,`$itemsData`,`$formsData` must already be retreived from the DB
 
-###_getMonitrallGroupsFromDB###
+###_getMonitrallGroupsFromDB
 
 Returns an array of Groups from the DB. Uses the `_getData` method with the  `MonitrallGroupsById` or `MonitrallGroups` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -476,7 +476,7 @@ Returns an array of Groups from the DB. Uses the `_getData` method with the  `Mo
 _getMonitrallGroupsFromDB($name = null)
 ```
 
-###_getMonitrallResultsFromDB###
+###_getMonitrallResultsFromDB
 
 Returns an array of Results from the DB. Uses the `_getData` method with the  `MonitrallResultsById` or `MonitrallResults` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -484,7 +484,7 @@ Returns an array of Results from the DB. Uses the `_getData` method with the  `M
 _getMonitrallResultsFromDB($name = null)
 ```
 
-###_getMonitrallNotificationResults###
+###_getMonitrallNotificationResults
 
 Returns an array of Notifications from the DB. Uses the `_getData` method with the  `MonitrallNotificationResults` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -493,7 +493,7 @@ _getMonitrallNotificationResults()
 ```
 
 
-###_updateNotificationsNextDate###
+###_updateNotificationsNextDate
 
 Updates the next date in the Notifications table. Uses `_doForm` method with the `MonitrallUpdateNotifications` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -501,7 +501,7 @@ Updates the next date in the Notifications table. Uses `_doForm` method with the
 _updateNotificationsNextDate($idIn,$nextDateIn)
 ```
 
-###_getMonitrallFormsFromDB###
+###_getMonitrallFormsFromDB
 
 Returns an array of Forms from the DB. Uses the `_getData` method with the  `MonitrallFormsById` or `MonitrallFormsByResultId` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -509,7 +509,7 @@ Returns an array of Forms from the DB. Uses the `_getData` method with the  `Mon
 _getMonitrallFormsFromDB($name = null,$by = "id")
 ```
 
-###_getMonitrallDashboardsFromDB###
+###_getMonitrallDashboardsFromDB
 
 Returns an array of Dashboards from the DB. Uses the `_getData` method with the  `MonitrallDashboards` query which can be found at `api/config/monitrallQueries.php` 
 
@@ -517,7 +517,7 @@ Returns an array of Dashboards from the DB. Uses the `_getData` method with the 
 _getMonitrallDashboardsFromDB($name = null,$by = "id")
 ```
 
-###_getMonitrallObjects###
+###_getMonitrallObjects
 
 Uses the getMonitrall____db methods (see above) to return Monitrall objects (Arrays) from the database. It can return one of the following:
 
@@ -533,7 +533,7 @@ Uses the getMonitrall____db methods (see above) to return Monitrall objects (Arr
 _getMonitrallObjects($objectType,$name = null)
 ```
 
-###_compare###
+###_compare
 
 Compares `$post` with `$value` using an `$operator` and returns a `boolean` value. This function is used mainly for server side comparisons such as email notifications. 
 It can compare using the following operators:
@@ -552,7 +552,7 @@ It can compare using the following operators:
  _compare($post, $operator, $value)
 ```
 
-###_getResultCompareData###
+###_getResultCompareData
 
 Gets the details of a result, executes the query and gets the data, and performs the comparisons. 
 Note that in order for the comparison the data that are returned from the query must contain at least one column named `value` for each row. 
@@ -582,7 +582,7 @@ stdClass Object (
 _getResultCompareData($name)
 ```
 
-###_printCompareResult###
+###_printCompareResult
 
 Uses an array of objects described in `_getResultCompareData` and returns HTML code to with a table of the results, with the indication of `RED|GREEN|ORANGE`.
 Note that this method only prints the columns `name` and `value` for each row. 
@@ -591,7 +591,7 @@ Note that this method only prints the columns `name` and `value` for each row.
 _printCompareResult($reportRes,$bodyTop ="",$bodyBottom="")
 ```
 
-###_sendNotificationEmail###
+###_sendNotificationEmail
 
 Sends an email using the `_printCompareResult` method described above. 
 It uses the `Swift` library to send the email
@@ -600,7 +600,7 @@ It uses the `Swift` library to send the email
 _sendNotificationEmail($reportRes,$eMails=null)
 ```
 
-###_replaceSpecialTags###
+###_replaceSpecialTags
 
 Replaces `#dd#` with the current number of day, `#mm#` the current month number and `#yyyy#` with he current year number. 
 
@@ -608,7 +608,7 @@ Replaces `#dd#` with the current number of day, `#mm#` the current month number 
 _replaceSpecialTags($strIn)
 ```
 
-###_is_cli###
+###_is_cli
 
 Checks if it is run on commandline. 
 
@@ -617,7 +617,7 @@ Data
 
 The following data types/objects are used throughout the file. 
 
-###$groupData###
+###$groupData
 
 is the array of objects that represent a group. i.e. 
 
@@ -638,7 +638,7 @@ Array (
 )
 ```
 
-###$itemsData###
+###$itemsData
 
 is the array of objects that represent items (results). i.e.
 
@@ -692,7 +692,7 @@ Array (
 
 ```
 
-###$formData###
+###$formData
 
 is the array of objects that represent forms. i.e.
 
@@ -734,7 +734,7 @@ Array (
     )
 ```
 
-###$connections###
+###$connections
 
 the array of objects that represent the connections. i.e.
 
@@ -788,7 +788,7 @@ array (
 )
 ```
 
-###$dashBoards###
+###$dashBoards
 
 the array of objects that represent the dashboards. i.e.
 
@@ -812,11 +812,11 @@ array (
 )
 ```
   
-###$parameters###
+###$parameters
 
 An array of variable parameters to be passed in a query. 
 
-###$format###
+###$format
 
 the input or output format. Can be either `ARRAY` or `JSON`
 
