@@ -40,7 +40,7 @@ Note that all results created can also be handled as `web services`. To call the
 
 ```http
 api/getResults/resultId
-``` 
+```
 
 The response of the webservice is in JSON format. Here is an example
 
@@ -90,7 +90,7 @@ The response of the webservice is in JSON format. Here is an example
   ```sql
   SELECT name, value FROM table WHERE error=1; 
   ```
-   
+  
   - *Webservice* path (query) can be absolute or relative. I.E. the following will work 
   ```http
   ../data/file.json
@@ -145,7 +145,7 @@ The forms web service that is called is
 
 ```http
 api/syncServices
-``` 
+```
 
 The normal output of the web service is:
 
@@ -235,7 +235,7 @@ Again a scheduler could be used to trigger custom notifications, making this the
 The results that will be called **MUST** have a `name` and `value` column. 
 
 ```dos
-C:\php\php.exe -f C:\Code\htdocs\monitrall\api\customMotifications.php resultName1,resultName2,resultName3 red|orange|green|all [email@company.com,other@company.com]
+C:\php\php.exe -f C:\Code\htdocs\monitrall\api\customMotifications.php resultName1,resultName2,resultName3 red|orange|orange_red|green|all [email@company.com,other@company.com]
 ```
 
 ### 3.3 Custom Stats

@@ -78,6 +78,11 @@ if (!_is_cli()) {
 						array_push($compareDataArr,$compareData);
 					}
 					break;
+				case 'orange_red':
+					if (($compareData->hasOrange) || ($compareData->hasRed)) {
+						array_push($compareDataArr,$compareData);
+					}
+					break;
 				case 'green':
 					if ($compareData->hasGreen) {
 						array_push($compareDataArr,$compareData);

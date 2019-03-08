@@ -11,7 +11,8 @@ Object Literal. The model of data. Main data are contained in the groupsData pro
 - *frontPageData*
 - *tempServiceData*
 - *dashData*
-    
+  
+
 **Methods**
 
 - *getItemByIndex(itemIndex)*
@@ -29,6 +30,7 @@ Object Literal. The model of data. Main data are contained in the groupsData pro
 - *getDashById*
   get the dashboard object in the dashData array
   
+
 **groupsData sample**
 
 ```json
@@ -811,7 +813,7 @@ array (
 	)
 )
 ```
-  
+
 ###$parameters
 
 An array of variable parameters to be passed in a query. 
@@ -861,7 +863,7 @@ How to call:
 ------------
 
 ```
-C:\php\php.exe -f C:\Code\htdocs\monitrall\api\customMotifications.php resultName1,resultName2,resultName3 red|orange|green|all [email@company.com,other@company.com]
+C:\php\php.exe -f C:\Code\htdocs\monitrall\api\customMotifications.php resultName1,resultName2,resultName3 red|orange|orange_red|green|all [email@company.com,other@company.com]
 ```
 
 ------------------------------------------
